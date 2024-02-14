@@ -13,10 +13,11 @@ class SquareNumberActivity : AppCompatActivity() {
 
         numText = findViewById(R.id.sueqre_number_tv_id)
 
-
-        numText.text = (intent.getIntExtra(Constants.NUMBER, 0) *
-                intent.getIntExtra(Constants.NUMBER, 0)).toString()
-
+        if (intent.extras != null && intent.extras!!.containsKey(Constants.NUMBER))
+        numText.text = Math.pow(
+            intent.getIntExtra(Constants.NUMBER, 0).toDouble(), 2.0)
+            .toInt()
+            .toString()
 
     }
 }

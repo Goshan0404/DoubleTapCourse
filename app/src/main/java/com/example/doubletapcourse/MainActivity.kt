@@ -12,10 +12,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var numberTextView: TextView
     private lateinit var toNextActivity: Button
 
+    companion object {
+        val TAG = "MainActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d(TAG, "onCreate")
+
+
         numberTextView = findViewById(R.id.number_tv_id)
         toNextActivity = findViewById(R.id.toNext_button_id)
 
@@ -41,24 +47,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        Log.d("start", "onStart: ")
+        Log.d(TAG, "onStart")
     }
 
     override fun onStop() {
         super.onStop()
-        Log.d("stop", "onStart: ")
+        Log.d(TAG, "onStop")
 
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d("pause", "onStart: ")
+        Log.d(TAG, "onPause")
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("destroy", "onStart: ")
+        Log.d(TAG, "onDestroy")
 
     }
 }
