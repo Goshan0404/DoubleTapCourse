@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">DoubleTapCourse</string>
+    <string name="high">High</string>
+    <string name="low">Low</string>
+    <string name="day">Day</string>
+    <string name="week">Week</string>
+    <string name="mouth">Mouth</string>
+    <string name="priority">Priority</string>
+    <string name="count">Count</string>
+    <string name="interval">Interval</string>
+
+
+    <string-array
+        name="priority_array">
+        <item>@string/high</item>
+        <item>@string/low</item>
+    </string-array>
+
+    <string-array
+        name="times_array">
+        <item>@string/day</item>
+        <item>@string/week</item>
+        <item>@string/mouth</item>
+    </string-array>
 </resources>
