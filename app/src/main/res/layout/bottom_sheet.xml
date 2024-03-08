@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
+
+
+        <LinearLayout
+            android:id="@+id/filter_bottomSheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="15.dp"
+            app:endIconMode="clear_text"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/name_search_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15.dp">
+
+
+            <AutoCompleteTextView
+                android:id="@+id/priority_search_spinner"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/priority"
+                android:inputType="none"
+                app:simpleItems="@array/priority_array" />
+
+            <Button
+                android:id="@+id/filter_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+</FrameLayout>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,10 +1,12 @@
-package com.example.doubletapcourse
+package com.example.doubletapcourse.views.adapter
 
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.doubletapcourse.R
+import com.example.doubletapcourse.data.model.Habit
 
-class HabitViewHolder(itemView: View, private val itemClick: (habit: Habit, positioni: Int) -> Unit): RecyclerView.ViewHolder(itemView) {
+class HabitViewHolder(itemView: View, private val itemClick: (habit: Habit, position: Int) -> Unit): RecyclerView.ViewHolder(itemView) {
     private val name: TextView = itemView.findViewById(R.id.name_textView)
     private val description: TextView = itemView.findViewById(R.id.description_textView)
     private val type: TextView = itemView.findViewById(R.id.type_textView)
@@ -13,12 +15,11 @@ class HabitViewHolder(itemView: View, private val itemClick: (habit: Habit, posi
 
 
     fun bind(habit: Habit) {
-
         name.text = habit.name
         description.text = habit.description
-        type.text = habit.type
+        type.text = habit.type.toString()
         priority.text = habit.priority.toString()
-        times.text = "${habit.count} in ${habit.interval}"
+        times.text = itemView.context.getString(R.string.habit_times, habit.count.toString(), habit.interval)
 
         itemView.setOnClickListener {
             itemClick(habit, adapterPosition)

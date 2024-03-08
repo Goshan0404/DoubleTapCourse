@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".views.fragments.AddHabitFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:endIconMode="clear_text"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+        android:paddingTop="15.dp">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:endIconMode="clear_text"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+        android:paddingTop="15.dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/description_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:inputType="textMultiLine" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+            android:paddingTop="15.dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/count_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/count"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="In"
+            android:paddingHorizontal="15dp"
+            android:textSize="20sp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"                android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15.dp">
+            <AutoCompleteTextView
+                android:id="@+id/interval_spinner"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:hint="@string/interval"
+            app:simpleItems="@array/intervals_array"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15.dp"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+
+        <AutoCompleteTextView
+            android:id="@+id/priority_spinner"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:hint="@string/priority"
+            app:simpleItems="@array/priority_array" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <RadioGroup
+        android:id="@+id/type_radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+
+        <RadioButton
+            android:id="@+id/useful_radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/useful"/>
+
+        <RadioButton
+            android:id="@+id/unuseful_radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unuseful"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"/>
+
+</LinearLayout>

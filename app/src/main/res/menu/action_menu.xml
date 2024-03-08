@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_item_habit_list"
+        android:icon="@drawable/baseline_format_list_bulleted_24"
+        android:title="@string/habits" />
+
+    <item
+        android:id="@+id/menu_item_about_app"
+        android:icon="@drawable/baseline_info_24"
+        android:title="@string/about_app" />
+</menu>
