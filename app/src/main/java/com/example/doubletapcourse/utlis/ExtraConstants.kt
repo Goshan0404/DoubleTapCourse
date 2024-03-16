@@ -1,6 +1,7 @@
 package com.example.doubletapcourse.utlis
 
 object ExtraConstants {
+    // вынести
     const val IS_POSITIVE_HABITS = "isPositiveHabits"
     const val KEY: String = "key"
     const val HABIT = "habit"

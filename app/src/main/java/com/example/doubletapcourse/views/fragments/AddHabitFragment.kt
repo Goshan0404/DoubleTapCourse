@@ -31,6 +31,7 @@ class AddHabitFragment : Fragment() {
 
     companion object {
 
+
         fun newInstance(key: String, habit: Habit? = null) =
             AddHabitFragment().apply {
                 arguments = Bundle().apply {
