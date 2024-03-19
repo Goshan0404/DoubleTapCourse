@@ -6,25 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.doubletapcourse.R
+import com.example.doubletapcourse.data.HabitStore
 import com.example.doubletapcourse.data.model.Habit
-import com.example.doubletapcourse.data.model.Interval
-import com.example.doubletapcourse.data.model.Priority
-import com.example.doubletapcourse.data.model.Type
 import com.example.doubletapcourse.databinding.FragmentHabitListBinding
 import com.example.doubletapcourse.utlis.ExtraConstants
 import com.example.doubletapcourse.views.adapter.HabitAdapter
 import com.example.doubletapcourse.views.viewModel.HabitListViewModel
-import java.util.UUID
 
 
 class HabitListFragment : Fragment() {
     private var _binding: FragmentHabitListBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: HabitListViewModel by viewModels()
 
-    private lateinit var habits: List<Habit>
+    private var habits: List<Habit> =  arrayListOf()
 
     private val adapter: HabitAdapter = HabitAdapter(habits) { habit: Habit, position: Int ->
 
@@ -33,7 +32,6 @@ class HabitListFragment : Fragment() {
                 R.id.fragment_container,
                 AddHabitFragment.newInstance(ExtraConstants.EDIT_HABIT, habit)
             ).hide(parentFragmentManager.findFragmentById(R.id.fragment_container)!!).commit()
-
     }
 
 
@@ -47,6 +45,14 @@ class HabitListFragment : Fragment() {
             }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        HabitStore.habits.observe(this) {
+            adapter.setData(viewModel.getHabits())
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,29 +64,18 @@ class HabitListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val habit = Habit(UUID.randomUUID().toString(), "new", "lala", Type.Useful, Priority.High, 3, Interval.Day)
-        habits = arrayListOf(habit)
 
+        setAdapter()
+    }
+
+    private fun setAdapter() {
         binding.habitsList.adapter = adapter
         val dividerItemDecoration = DividerItemDecoration(
             binding.habitsList.context,
             DividerItemDecoration.VERTICAL,
         )
         binding.habitsList.addItemDecoration(dividerItemDecoration)
-
-        setFragmentResultListener(ExtraConstants.EDIT_HABIT)
-        setFragmentResultListener(ExtraConstants.ADD_HABIT)
-    }
-
-    private fun setFragmentResultListener(key: String) {
-        parentFragmentManager.setFragmentResultListener(
-            key,
-            this
-        ) { _: String, _: Bundle ->
-//            habits = viewModel.getHabits()
-            adapter.notifyDataSetChanged()
-
-        }
+        adapter.setData(habits)
     }
 
     override fun onDestroyView() {
