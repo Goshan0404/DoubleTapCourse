@@ -14,16 +14,21 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.viewModels
 import com.example.doubletapcourse.R
+import com.example.doubletapcourse.data.model.Priority
 import com.example.doubletapcourse.databinding.BottomSheetBinding
 import com.example.doubletapcourse.databinding.FragmentPagerOfHabitListsBinding
 import com.example.doubletapcourse.utlis.ExtraConstants
 import com.example.doubletapcourse.views.viewModel.HabitListViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 class PagerOfHabitListsFragment : Fragment() {
     private var _binding: FragmentPagerOfHabitListsBinding? = null
     private val binding get() = _binding!!
+
+    private val bottomSheet = BottomSheetFilter()
+
 
     companion object {
         @JvmStatic
@@ -59,7 +64,7 @@ class PagerOfHabitListsFragment : Fragment() {
                 .commit()
         }
 
-        val bottomSheet = BottomSheetFilter()
+
         binding.filterButton.setOnClickListener {
             bottomSheet.show(parentFragmentManager, BottomSheetFilter.TAG)
         }
@@ -80,52 +85,57 @@ class PagerOfHabitListsFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-}
 
-class PagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
-    override fun getCount(): Int {
-        return 2
-    }
+    class PagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
+        override fun getCount(): Int {
+            return 2
+        }
 
-    override fun getItem(position: Int): Fragment {
-        return when (position) {
-            0 -> HabitListFragment.newInstance(true)
-            else -> HabitListFragment.newInstance(false)
+        override fun getItem(position: Int): Fragment {
+            return when (position) {
+                0 -> HabitListFragment.newInstance(true)
+                else -> HabitListFragment.newInstance(false)
+            }
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return if (position == 0)
+                "Positive Habits"
+            else
+                "Negative Habits"
         }
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        return if (position == 0)
-            "Positive Habits"
-        else
-            "Negative Habits"
-    }
-}
+    class BottomSheetFilter : BottomSheetDialogFragment() {
+        private var _binding: BottomSheetBinding? = null
+        private val binding get() = _binding!!
+        private val viewModel: HabitListViewModel by viewModels()
 
-class BottomSheetFilter : BottomSheetDialogFragment() {
-    private var _binding: BottomSheetBinding? = null
-    private val binding get() = _binding!!
-    private val viewModel: HabitListViewModel by viewModels()
-
-    companion object {
-        const val TAG = "BottomSheetFilter"
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = BottomSheetBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.filterButton.setOnClickListener {
+        companion object {
+            const val TAG = "BottomSheetFilter"
         }
+
+        override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View? {
+            _binding = BottomSheetBinding.inflate(inflater, container, false)
+            return binding.root
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+
+            binding.filterButton.setOnClickListener {
+                viewModel.currentTypeHabits.value =
+                    viewModel.currentTypeHabits.value?.filter {
+                        it.name == binding.nameSearchTextView.text.toString()
+                    }?.filter { it.priority == Priority.valueOf(binding.prioritySearchSpinner.text.toString()) }
+
+            }
+        }
+
+
     }
-
-
 }

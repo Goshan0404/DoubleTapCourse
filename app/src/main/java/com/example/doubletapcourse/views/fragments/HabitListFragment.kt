@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.data.HabitStore
@@ -25,7 +24,7 @@ class HabitListFragment : Fragment() {
 
     private var habits: List<Habit> =  arrayListOf()
 
-    private val adapter: HabitAdapter = HabitAdapter(habits) { habit: Habit, position: Int ->
+    private val listAdapter: HabitAdapter = HabitAdapter(habits) { habit: Habit, position: Int ->
 
         parentFragmentManager.beginTransaction()
             .add(
@@ -45,13 +44,6 @@ class HabitListFragment : Fragment() {
             }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        HabitStore.habits.observe(this) {
-            adapter.setData(viewModel.getHabits())
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,19 +55,21 @@ class HabitListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        habits = viewModel.currentTypeHabits.value!!
 
-
+        viewModel.currentTypeHabits.observe(requireActivity()) {
+            listAdapter.setData(it)
+        }
         setAdapter()
     }
 
     private fun setAdapter() {
-        binding.habitsList.adapter = adapter
+        binding.habitsList.adapter = listAdapter
         val dividerItemDecoration = DividerItemDecoration(
             binding.habitsList.context,
             DividerItemDecoration.VERTICAL,
         )
         binding.habitsList.addItemDecoration(dividerItemDecoration)
-        adapter.setData(habits)
     }
 
     override fun onDestroyView() {

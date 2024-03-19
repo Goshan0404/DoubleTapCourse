@@ -17,7 +17,7 @@ object HabitStore {
         val habit = Habit(UUID.randomUUID().toString(), "new", "lala", Type.Useful, Priority.High, 3, Interval.Day)
 
         _habits.value = mutableListOf()
-        _habits.value?.add(habit)
+//        _habits.value?.add(habit)
     }
 
     fun add(habit: Habit) {

@@ -137,7 +137,6 @@ class AddHabitFragment : Fragment() {
             viewModel.priority = binding.prioritySpinner.text.toString()
             viewModel.type = (view.findViewById<RadioButton>(binding.typeRadioGroup.checkedRadioButtonId)).text.toString()
 
-
             viewModel.saveHabit(key, {
                 parentFragmentManager.setFragmentResult(key, Bundle())
 
