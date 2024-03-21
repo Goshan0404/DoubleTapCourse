@@ -1,15 +1,13 @@
 package com.example.doubletapcourse.views.viewModel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.data.HabitStore
+import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.data.model.Type
-import com.example.doubletapcourse.utlis.ExtraConstants
 import com.example.doubletapcourse.views.fragments.HabitListFragment
 import kotlinx.coroutines.launch
 

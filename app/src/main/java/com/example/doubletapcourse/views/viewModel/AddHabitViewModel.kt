@@ -1,15 +1,11 @@
 package com.example.doubletapcourse.views.viewModel
 
-import android.view.View
-import android.widget.RadioButton
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.data.HabitStore
+import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.data.model.Interval
 import com.example.doubletapcourse.data.model.Priority
 import com.example.doubletapcourse.data.model.Type
-import com.example.doubletapcourse.utlis.ExtraConstants
 import java.util.UUID
 
 class AddHabitViewModel : ViewModel() {
@@ -28,10 +24,7 @@ class AddHabitViewModel : ViewModel() {
         }
 
         val habit = getHabit()
-        if (key == ExtraConstants.ADD_HABIT)
-            HabitStore.add(habit)
-        if (key == ExtraConstants.EDIT_HABIT)
-            HabitStore.edit(habit)
+        HabitStore.save(habit)
         success()
     }
 
