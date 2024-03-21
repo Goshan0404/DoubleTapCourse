@@ -3,9 +3,6 @@ package com.example.doubletapcourse.views.fragments
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
@@ -17,9 +14,7 @@ import com.example.doubletapcourse.R
 import com.example.doubletapcourse.data.model.Priority
 import com.example.doubletapcourse.databinding.BottomSheetBinding
 import com.example.doubletapcourse.databinding.FragmentPagerOfHabitListsBinding
-import com.example.doubletapcourse.utlis.ExtraConstants
 import com.example.doubletapcourse.views.viewModel.HabitListViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
@@ -51,14 +46,14 @@ class PagerOfHabitListsFragment : Fragment() {
         binding.pagerHabitList.adapter = PagerAdapter(parentFragmentManager)
         binding.tabLayoutHabitsList.setupWithViewPager(binding.pagerHabitList)
 
-        setFragmentResultListener(ExtraConstants.ADD_HABIT)
-        setFragmentResultListener(ExtraConstants.EDIT_HABIT)
+        setFragmentResultListener(AddHabitFragment.ADD_HABIT)
+        setFragmentResultListener(AddHabitFragment.EDIT_HABIT)
 
         binding.addHabit.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .add(
                     R.id.fragment_container,
-                    AddHabitFragment.newInstance(ExtraConstants.ADD_HABIT)
+                    AddHabitFragment.newInstance(AddHabitFragment.ADD_HABIT)
                 )
                 .hide(this)
                 .commit()

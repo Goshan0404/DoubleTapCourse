@@ -2,29 +2,20 @@ package com.example.doubletapcourse.views.fragments
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.RadioButton
-import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.utlis.ExtraConstants
 import com.example.doubletapcourse.data.model.Habit
-import com.example.doubletapcourse.data.model.Interval
-import com.example.doubletapcourse.data.model.Priority
-import com.example.doubletapcourse.databinding.FragmentAddHabitBinding
 import com.example.doubletapcourse.data.model.Type
+import com.example.doubletapcourse.databinding.FragmentAddHabitBinding
 import com.example.doubletapcourse.views.viewModel.AddHabitViewModel
-import com.google.android.material.textfield.TextInputEditText
-import java.util.UUID
 
 
 class AddHabitFragment : Fragment() {
@@ -35,13 +26,16 @@ class AddHabitFragment : Fragment() {
 
 
     companion object {
-
+        const val KEY: String = "key"
+        const val HABIT = "habit"
+        const val ADD_HABIT = "addHabit"
+        const val EDIT_HABIT = "editHabit"
 
         fun newInstance(key: String, habit: Habit? = null) =
             AddHabitFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ExtraConstants.HABIT, habit)
-                    putString(ExtraConstants.KEY, key)
+                    putParcelable(HABIT, habit)
+                    putString(KEY, key)
                 }
             }
     }
@@ -59,9 +53,9 @@ class AddHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val key = arguments?.getString(ExtraConstants.KEY)
+        val key = arguments?.getString(KEY)
 
-        arguments?.getParcelable(ExtraConstants.HABIT, Habit::class.java)?.let { habit ->
+        arguments?.getParcelable(HABIT, Habit::class.java)?.let { habit ->
             viewModel.id = habit.id
             setViewsField(habit)
         }

@@ -10,10 +10,11 @@ import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.data.HabitStore
 import com.example.doubletapcourse.data.model.Type
 import com.example.doubletapcourse.utlis.ExtraConstants
+import com.example.doubletapcourse.views.fragments.HabitListFragment
 import kotlinx.coroutines.launch
 
 class HabitListViewModel(handle: SavedStateHandle) : ViewModel() {
-    private val isPositive: Boolean = handle[ExtraConstants.IS_POSITIVE_HABITS] ?: true
+    private val isPositive: Boolean = handle[HabitListFragment.IS_POSITIVE_HABITS] ?: true
     private val type =
         if (isPositive)
             Type.Useful

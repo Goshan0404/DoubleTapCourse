@@ -17,6 +17,8 @@ import com.example.doubletapcourse.views.viewModel.HabitListViewModel
 
 
 class HabitListFragment : Fragment() {
+
+
     private var _binding: FragmentHabitListBinding? = null
     private val binding get() = _binding!!
 
@@ -35,11 +37,14 @@ class HabitListFragment : Fragment() {
 
 
     companion object {
+
+        const val IS_POSITIVE_HABITS = "isPositiveHabits"
+
         @JvmStatic
         fun newInstance(isPositiveHabits: Boolean) =
             HabitListFragment().apply {
                 arguments = Bundle().apply {
-                    putBoolean(ExtraConstants.IS_POSITIVE_HABITS, isPositiveHabits)
+                    putBoolean(IS_POSITIVE_HABITS, isPositiveHabits)
                 }
             }
     }
