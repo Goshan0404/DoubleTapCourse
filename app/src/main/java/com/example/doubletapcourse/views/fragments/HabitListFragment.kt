@@ -30,7 +30,7 @@ class HabitListFragment : Fragment() {
             .add(
                 R.id.fragment_container,
                 AddHabitFragment.newInstance(AddHabitFragment.EDIT_HABIT, habit)
-            ).commit()
+            ).hide(parentFragmentManager.findFragmentById(R.id.fragment_container)!!).commit()
     }
 
 
@@ -58,7 +58,6 @@ class HabitListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         habits = viewModel.currentTypeHabits.value!!
 
         viewModel.currentTypeHabits.observe(requireActivity()) {
