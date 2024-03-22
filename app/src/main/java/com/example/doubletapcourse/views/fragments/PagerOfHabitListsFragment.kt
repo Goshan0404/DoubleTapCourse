@@ -55,7 +55,7 @@ class PagerOfHabitListsFragment : Fragment() {
                     R.id.fragment_container,
                     AddHabitFragment.newInstance(AddHabitFragment.ADD_HABIT)
                 )
-                .hide(this)
+//                .hide(this)
                 .commit()
         }
 
@@ -71,7 +71,7 @@ class PagerOfHabitListsFragment : Fragment() {
             key,
             this
         ) { _: String, _: Bundle ->
-            parentFragmentManager.beginTransaction().show(this).commit()
+//            parentFragmentManager.beginTransaction().show(this).commit()
         }
     }
 

@@ -8,10 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.data.HabitStore
 import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.databinding.FragmentHabitListBinding
-import com.example.doubletapcourse.utlis.ExtraConstants
 import com.example.doubletapcourse.views.adapter.HabitAdapter
 import com.example.doubletapcourse.views.viewModel.HabitListViewModel
 
@@ -31,8 +29,8 @@ class HabitListFragment : Fragment() {
         parentFragmentManager.beginTransaction()
             .add(
                 R.id.fragment_container,
-                AddHabitFragment.newInstance(ExtraConstants.EDIT_HABIT, habit)
-            ).hide(parentFragmentManager.findFragmentById(R.id.fragment_container)!!).commit()
+                AddHabitFragment.newInstance(AddHabitFragment.EDIT_HABIT, habit)
+            ).commit()
     }
 
 
@@ -60,6 +58,7 @@ class HabitListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         habits = viewModel.currentTypeHabits.value!!
 
         viewModel.currentTypeHabits.observe(requireActivity()) {

@@ -60,32 +60,8 @@ class AddHabitFragment : Fragment() {
             setViewsField(habit)
         }
 
-        binding.nameTextView.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus)
-                viewModel.name = binding.nameTextView.text.toString()
-        }
-        binding.descriptionTextView.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus)
-                viewModel.description = binding.descriptionTextView.text.toString()
-        }
-        binding.countEditText.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus)
-                viewModel.count = binding.countEditText.text.toString()
-        }
-        binding.intervalSpinner.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus)
-                viewModel.interval = binding.intervalSpinner.text.toString()
-        }
-        binding.prioritySpinner.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus)
-                viewModel.priority = binding.prioritySpinner.text.toString()
-        }
-        binding.typeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            viewModel.type = (view.findViewById<RadioButton>(checkedId)).text.toString()
-        }
 
         saveButtonListener(view, key!!)
-
     }
 
 
