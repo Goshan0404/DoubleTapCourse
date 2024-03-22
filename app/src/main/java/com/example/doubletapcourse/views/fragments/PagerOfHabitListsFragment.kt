@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.data.model.Priority
 import com.example.doubletapcourse.databinding.BottomSheetBinding
@@ -50,13 +51,15 @@ class PagerOfHabitListsFragment : Fragment() {
         setFragmentResultListener(AddHabitFragment.EDIT_HABIT)
 
         binding.addHabit.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .add(
-                    R.id.fragment_container,
-                    AddHabitFragment.newInstance(AddHabitFragment.ADD_HABIT)
-                )
-//                .hide(this)
-                .commit()
+            findNavController().navigate("Add Habit")
+
+//            parentFragmentManager.beginTransaction()
+//                .add(
+//                    R.id.fragment_container,
+//                    AddHabitFragment.newInstance(AddHabitFragment.ADD_HABIT)
+//                )
+////                .hide(this)
+//                .commit()
         }
 
 

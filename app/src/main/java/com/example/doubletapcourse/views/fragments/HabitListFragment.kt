@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.data.model.Habit
@@ -26,11 +27,12 @@ class HabitListFragment : Fragment() {
 
     private val listAdapter: HabitAdapter = HabitAdapter(habits) { habit: Habit, position: Int ->
 
-        parentFragmentManager.beginTransaction()
-            .add(
-                R.id.fragment_container,
-                AddHabitFragment.newInstance(AddHabitFragment.EDIT_HABIT, habit)
-            ).hide(parentFragmentManager.findFragmentById(R.id.fragment_container)!!).commit()
+        findNavController().navigate("addHabit")
+//        parentFragmentManager.beginTransaction()
+//            .add(
+//                R.id.fragment_container,
+//                AddHabitFragment.newInstance(AddHabitFragment.EDIT_HABIT, habit)
+//            ).hide(parentFragmentManager.findFragmentById(R.id.fragment_container)!!).commit()
     }
 
 

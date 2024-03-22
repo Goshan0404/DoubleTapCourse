@@ -6,9 +6,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.navigation.createGraph
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.fragment
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.databinding.ActivityMainBinding
 import com.example.doubletapcourse.views.fragments.AboutAppFragment
+import com.example.doubletapcourse.views.fragments.AddHabitFragment
 import com.example.doubletapcourse.views.fragments.PagerOfHabitListsFragment
 
 
@@ -24,10 +29,20 @@ class MainActivity : AppCompatActivity() {
 
         setAppBar()
 
-        supportFragmentManager.beginTransaction().add(
-            R.id.fragment_container,
-            PagerOfHabitListsFragment.newInstance()
-        ).commit()
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        navController.graph = navController.createGraph(startDestination = "pagerOfHabits") {
+            fragment<PagerOfHabitListsFragment>("pagerOfHabits") {
+                label = "Pager of Habits"
+            }
+            fragment<AddHabitFragment>("addHabit") {
+                label = "Add Habit"
+            }
+        }
+
 
         setNavigationListener()
     }

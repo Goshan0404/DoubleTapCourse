@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.data.model.Type
@@ -110,9 +111,10 @@ class AddHabitFragment : Fragment() {
             viewModel.saveHabit(key, {
                 parentFragmentManager.setFragmentResult(key, Bundle())
 
-                parentFragmentManager.beginTransaction()
-                    .remove(this)
-                    .commit()
+                findNavController().navigate("pagerOfHabits")
+//                parentFragmentManager.beginTransaction()
+//                    .remove(this)
+//                    .commit()
             }, {
                 Toast.makeText(view.context, "fields must by not empty", Toast.LENGTH_SHORT).show()
             })
