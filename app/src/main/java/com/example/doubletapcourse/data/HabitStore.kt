@@ -1,38 +1,41 @@
 package com.example.doubletapcourse.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.room.Room
+import android.app.Application
 import com.example.doubletapcourse.App
 import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.data.model.Interval
 import com.example.doubletapcourse.data.model.Priority
 import com.example.doubletapcourse.data.model.Type
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.UUID
 
-object HabitStore {
-    private val app = App.getInstance()
+class HabitStore(application: Application) {
+    private var app: App = application as App
+
     private val habitDao = app.getDb().habitDao()
+
 
     val habits = habitDao.getHabits()
 
+//    init {
+//        val habit = Habit(UUID.randomUUID().toString(), "new", "lala", Type.Useful, Priority.High, 3, Interval.Day)
+//
+//        CoroutineScope(Dispatchers.Unconfined).launch {
+//            habitDao.insert(habit)
+//        }
+//    }
 
-    fun save(habit: Habit) {
+    suspend fun save(habit: Habit) {
         habitDao.insert(habit)
+
     }
 
-//    fun add(habit: Habit) {
-//        habitDao.insert(habit)
-//    }
-//    fun edit(newHabit: Habit) {
-//        val indexOfHabit = _habits.value?.indexOfFirst { newHabit.id == it.id }!!
-//        _habits.value?.let {
-//            it[indexOfHabit] = newHabit
-//        }
-//        _habits.value = _habits.value
-//    }
+    suspend fun getTypeHabits(type: Type): List<Habit> {
 
-    fun getTypeHabits(type: Type): List<Habit> {
-        return habitDao.getHabitType(type).value ?: emptyList()
+        return habitDao.getHabitType(type.toString())
+
     }
 }

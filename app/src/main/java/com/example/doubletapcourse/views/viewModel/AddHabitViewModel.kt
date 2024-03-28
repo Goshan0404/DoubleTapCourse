@@ -1,14 +1,19 @@
 package com.example.doubletapcourse.views.viewModel
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.doubletapcourse.data.HabitStore
 import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.data.model.Interval
 import com.example.doubletapcourse.data.model.Priority
 import com.example.doubletapcourse.data.model.Type
+import com.example.doubletapcourse.views.fragments.AddHabitFragment
+import kotlinx.coroutines.launch
 import java.util.UUID
 
-class AddHabitViewModel : ViewModel() {
+class AddHabitViewModel(application: Application) : ViewModel() {
+    private val habitStore = HabitStore(application)
     var id: String? = null
     var name: String? = null
     var description: String? = null
@@ -17,14 +22,18 @@ class AddHabitViewModel : ViewModel() {
     var count: String? = null
     var interval: String? = null
 
-    fun saveHabit(key: String, success: () -> Unit, unSuccess: () -> Unit) {
+    fun saveHabit(success: () -> Unit, unSuccess: () -> Unit) {
         if (name == null || description == null || type == null || priority == null || count == null || interval == null) {
             unSuccess()
             return
         }
 
         val habit = getHabit()
-        HabitStore.save(habit)
+        viewModelScope.launch {
+
+            habitStore.save(habit)
+        }
+
         success()
     }
 

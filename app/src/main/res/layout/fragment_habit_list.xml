@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.fragments.HabitListFragment">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+                android:text="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/habits_list"
