@@ -11,11 +11,14 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.data.model.Type
 import com.example.doubletapcourse.databinding.FragmentAddHabitBinding
+import com.example.doubletapcourse.views.activity.MainActivity
 import com.example.doubletapcourse.views.viewModel.AddHabitViewModel
 
 
@@ -23,7 +26,13 @@ class AddHabitFragment : Fragment() {
 
     private var _binding: FragmentAddHabitBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: AddHabitViewModel by viewModels()
+    private val viewModel: AddHabitViewModel by viewModels {
+        object: ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return AddHabitViewModel(requireActivity().application) as T
+            }
+        }
+    }
 
 
     companion object {
@@ -108,18 +117,11 @@ class AddHabitFragment : Fragment() {
             viewModel.priority = binding.prioritySpinner.text.toString()
             viewModel.type = (view.findViewById<RadioButton>(binding.typeRadioGroup.checkedRadioButtonId)).text.toString()
 
-            viewModel.saveHabit(key, {
-                parentFragmentManager.setFragmentResult(key, Bundle())
-
-                findNavController().navigate("pagerOfHabits")
-//                parentFragmentManager.beginTransaction()
-//                    .remove(this)
-//                    .commit()
-            }, {
+            viewModel.saveHabit(success = {
+                findNavController().navigate(R.id.action_addHabitFragment_to_pagerOfHabitListsFragment)
+            }, unSuccess =  {
                 Toast.makeText(view.context, "fields must by not empty", Toast.LENGTH_SHORT).show()
             })
-
-
         }
     }
 

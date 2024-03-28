@@ -1,5 +1,6 @@
 package com.example.doubletapcourse.views.viewModel
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -11,28 +12,32 @@ import com.example.doubletapcourse.data.model.Type
 import com.example.doubletapcourse.views.fragments.HabitListFragment
 import kotlinx.coroutines.launch
 
-class HabitListViewModel(handle: SavedStateHandle) : ViewModel() {
+class HabitListViewModel(handle: SavedStateHandle, application: Application) : ViewModel() {
+
+    private val habitStore = HabitStore(application)
     private val isPositive: Boolean = handle[HabitListFragment.IS_POSITIVE_HABITS] ?: true
     private val type =
         if (isPositive)
             Type.Useful
         else
             Type.UnUseful
-
     var currentTypeHabits = MutableLiveData<List<Habit>>()
-        .apply {
-            value = HabitStore.getTypeHabits(type)
-        }
+
 
     init {
         viewModelScope.launch {
-            HabitStore.habits.asFlow().collect {
-                currentTypeHabits.value = HabitStore.getTypeHabits(type)
+            habitStore.habits.asFlow().collect {
+                currentTypeHabits.value = habitStore.getTypeHabits(type)
             }
         }
     }
 
-//    fun getHabits() {
-//        currentTypeHabits.value = HabitStore.getTypeHabits(type)
-//    }
+
+    suspend fun getHabits(): List<Habit> {
+        viewModelScope.launch {
+            currentTypeHabits.value = habitStore.getTypeHabits(type)
+        }.join()
+
+        return currentTypeHabits.value ?: emptyList()
+    }
 }
