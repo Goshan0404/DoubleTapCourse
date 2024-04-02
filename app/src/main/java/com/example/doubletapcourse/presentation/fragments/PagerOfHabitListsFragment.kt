@@ -1,23 +1,15 @@
-package com.example.doubletapcourse.views.fragments
+package com.example.doubletapcourse.presentation.fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.data.model.Priority
-import com.example.doubletapcourse.databinding.BottomSheetBinding
 import com.example.doubletapcourse.databinding.FragmentPagerOfHabitListsBinding
-import com.example.doubletapcourse.views.activity.MainActivity
-import com.example.doubletapcourse.views.viewModel.HabitListViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 class PagerOfHabitListsFragment : Fragment() {
@@ -43,7 +35,7 @@ class PagerOfHabitListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.pagerHabitList.adapter = PagerAdapter(parentFragmentManager)
+        binding.pagerHabitList.adapter = PagerAdapter(childFragmentManager)
         binding.tabLayoutHabitsList.setupWithViewPager(binding.pagerHabitList)
 
 

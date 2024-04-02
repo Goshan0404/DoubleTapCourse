@@ -1,4 +1,4 @@
-package com.example.doubletapcourse.views.fragments
+package com.example.doubletapcourse.presentation.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

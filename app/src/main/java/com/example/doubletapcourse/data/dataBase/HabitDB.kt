@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.doubletapcourse.data.model.Habit
+import com.example.doubletapcourse.domain.model.Habit
 
 @Database(entities = [Habit::class], version = 1)
 abstract class HabitDB : RoomDatabase() {

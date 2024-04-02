@@ -1,6 +1,5 @@
-package com.example.doubletapcourse.views.fragments
+package com.example.doubletapcourse.presentation.fragments
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,25 +8,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.data.model.Habit
-import com.example.doubletapcourse.data.model.Priority
+import com.example.doubletapcourse.domain.model.Habit
 import com.example.doubletapcourse.databinding.BottomSheetBinding
 import com.example.doubletapcourse.databinding.FragmentHabitListBinding
-import com.example.doubletapcourse.views.activity.MainActivity
-import com.example.doubletapcourse.views.adapter.HabitAdapter
-import com.example.doubletapcourse.views.viewModel.HabitListViewModel
+import com.example.doubletapcourse.presentation.adapter.HabitAdapter
+import com.example.doubletapcourse.presentation.viewModel.HabitListViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 
 class HabitListFragment : Fragment() {
@@ -48,6 +40,8 @@ class HabitListFragment : Fragment() {
 
         }
     }
+
+    private val bottomSheetFilter = BottomSheetFilter()
 
 
     private var habits: List<Habit> = arrayListOf()
@@ -100,6 +94,11 @@ class HabitListFragment : Fragment() {
         viewModel.currentTypeHabits.observe(requireActivity()) {
             listAdapter.setData(it)
         }
+
+        binding.filterButton.setOnClickListener {
+            bottomSheetFilter.show(childFragmentManager, BottomSheetFilter.TAG)
+
+        }
     }
 
     private fun setAdapter() {
@@ -119,7 +118,7 @@ class HabitListFragment : Fragment() {
     class BottomSheetFilter : BottomSheetDialogFragment() {
         private var _binding: BottomSheetBinding? = null
         private val binding get() = _binding!!
-//        private val viewModel: HabitListViewModel = viewmodel
+        private val viewModel: HabitListViewModel by viewModels(ownerProducer = { requireParentFragment() })
 
         companion object {
             const val TAG = "BottomSheetFilter"
@@ -137,14 +136,25 @@ class HabitListFragment : Fragment() {
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
-//            binding.filterButton.setOnClickListener {
-//                viewModel.currentTypeHabits.value =
-//                    viewModel.currentTypeHabits.value?.filter {
-//                        it.name == binding.nameSearchTextView.text.toString()
-//                    }
-//                        ?.filter { it.priority == Priority.valueOf(binding.prioritySearchSpinner.text.toString()) }
-//
-//            }
+            binding.filterButton.setOnClickListener {
+
+                val name = if (!binding.nameSearchTextView.text.toString().isEmpty()) {
+                    binding.nameSearchTextView.text.toString()
+                } else
+                    null
+
+                val priority = if (!binding.prioritySearchSpinner.text.toString().isEmpty())
+                    binding.prioritySearchSpinner.text.toString()
+                else
+                    null
+
+                lifecycleScope.launch {
+
+                    viewModel.filterHabits(name, priority) {
+                        this@BottomSheetFilter.dismiss()
+                    }
+                }
+            }
         }
 
 

@@ -1,11 +1,11 @@
-package com.example.doubletapcourse.views.adapter
+package com.example.doubletapcourse.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.data.model.Habit
+import com.example.doubletapcourse.domain.model.Habit
 
 class HabitAdapter(private var habits: List<Habit>, private val itemClick: (habit: Habit, position: Int) -> Unit) :
     RecyclerView.Adapter<HabitViewHolder>() {

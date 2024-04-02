@@ -1,23 +1,17 @@
-package com.example.doubletapcourse.views.activity
+package com.example.doubletapcourse.presentation.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.navigation.NavType
-import androidx.navigation.createGraph
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.fragment
-import com.example.doubletapcourse.App
+import com.bumptech.glide.Glide
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.data.model.Habit
 import com.example.doubletapcourse.databinding.ActivityMainBinding
-import com.example.doubletapcourse.views.fragments.AboutAppFragment
-import com.example.doubletapcourse.views.fragments.AddHabitFragment
-import com.example.doubletapcourse.views.fragments.PagerOfHabitListsFragment
-import kotlinx.serialization.json.Json
+import com.example.doubletapcourse.presentation.fragments.AboutAppFragment
+import com.example.doubletapcourse.presentation.fragments.PagerOfHabitListsFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +27,14 @@ class MainActivity : AppCompatActivity() {
 
         setAppBar()
         setNavigationListener()
+
+        val image = binding.navigationDrawer.getHeaderView(0).findViewById<ImageView>(R.id.header_image)
+
+        Glide.with(this)
+            .load("https://avatars.mds.yandex.net/get-mpic/3934197/img_id3959628304575582496.jpeg/orig")
+            .placeholder(R.drawable.cat)
+            .error(com.google.android.material.R.drawable.mtrl_ic_error)
+            .into(image)
     }
 
 

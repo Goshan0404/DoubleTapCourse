@@ -32,4 +32,5 @@
     <string name="filter">Filter</string>
     <string name="name">Name</string>
     <string name="positive_habits">Positive Habits</string>
+    <string name="done">done</string>
 </resources>

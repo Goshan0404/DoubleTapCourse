@@ -1,4 +1,4 @@
-package com.example.doubletapcourse.views.fragments
+package com.example.doubletapcourse.presentation.fragments
 
 import android.os.Build
 import android.os.Bundle
@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,11 +14,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.data.model.Habit
-import com.example.doubletapcourse.data.model.Type
+import com.example.doubletapcourse.domain.model.Habit
+import com.example.doubletapcourse.domain.model.Interval
+import com.example.doubletapcourse.domain.model.Priority
+import com.example.doubletapcourse.domain.model.Type
 import com.example.doubletapcourse.databinding.FragmentAddHabitBinding
-import com.example.doubletapcourse.views.activity.MainActivity
-import com.example.doubletapcourse.views.viewModel.AddHabitViewModel
+import com.example.doubletapcourse.presentation.viewModel.AddHabitViewModel
 
 
 class AddHabitFragment : Fragment() {
@@ -27,7 +27,7 @@ class AddHabitFragment : Fragment() {
     private var _binding: FragmentAddHabitBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AddHabitViewModel by viewModels {
-        object: ViewModelProvider.Factory {
+        object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return AddHabitViewModel(requireActivity().application) as T
             }
@@ -63,15 +63,12 @@ class AddHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val key = arguments?.getString(KEY)
-
         arguments?.getParcelable(HABIT, Habit::class.java)?.let { habit ->
-            viewModel.id = habit.id
             setViewsField(habit)
         }
 
 
-        saveButtonListener(view, key!!)
+        saveButtonListener(view)
     }
 
 
@@ -108,20 +105,31 @@ class AddHabitFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun saveButtonListener(view: View, key: String) {
-        binding.saveButton.setOnClickListener {
-            viewModel.interval = binding.intervalSpinner.text.toString()
-            viewModel.count = binding.countEditText.text.toString()
-            viewModel.description = binding.descriptionTextView.text.toString()
-            viewModel.name = binding.nameTextView.text.toString()
-            viewModel.priority = binding.prioritySpinner.text.toString()
-            viewModel.type = (view.findViewById<RadioButton>(binding.typeRadioGroup.checkedRadioButtonId)).text.toString()
+    private fun saveButtonListener(view: View) {
 
-            viewModel.saveHabit(success = {
-                findNavController().navigate(R.id.action_addHabitFragment_to_pagerOfHabitListsFragment)
-            }, unSuccess =  {
-                Toast.makeText(view.context, "fields must by not empty", Toast.LENGTH_SHORT).show()
-            })
+        var id = ""
+        arguments?.getParcelable(HABIT, Habit::class.java)?.let { habit ->
+            id = habit.id!!
+        }
+
+
+        binding.saveButton.setOnClickListener {
+            val name = binding.nameTextView.text.toString()
+            val description = binding.descriptionTextView.text.toString()
+            val type =
+                Type.valueOf((view.findViewById<RadioButton>(binding.typeRadioGroup.checkedRadioButtonId)).text.toString())
+            val priority = Priority.valueOf(binding.prioritySpinner.text.toString())
+            val count = binding.countEditText.text.toString().toInt()
+            val interval = Interval.valueOf(binding.intervalSpinner.text.toString())
+
+//          if (name == null || description == null || type == null || priority == null || count == null || interval == null) {
+//        }
+
+            viewModel.currentHabit = Habit(id, name, description, type, priority, count, interval)
+
+            viewModel.saveHabit {
+                findNavController().navigateUp()
+            }
         }
     }
 
