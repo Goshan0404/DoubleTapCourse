@@ -1,12 +1,10 @@
-package com.example.doubletapcourse.di
+package com.example.doubletapcourse.di.module
 
 import android.content.Context
-import androidx.room.Database
 import androidx.room.Room
-import com.example.doubletapcourse.data.HabitRepository
 import com.example.doubletapcourse.data.dataBase.HabitDB
+import com.example.doubletapcourse.data.dataBase.HabitDao
 import com.example.doubletapcourse.data.remote.HabitAPI
-import com.example.doubletapcourse.data.remote.RetrofitBuilder
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -16,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class HabitModule(private val context: Context) {
+class ApplicationModule(private val context: Context) {
     @Singleton
     @Provides
     fun getRetrofit(): Retrofit {
@@ -56,11 +54,12 @@ class HabitModule(private val context: Context) {
     }
 
     @Provides
+    fun getHabitDao(habitDB: HabitDB): HabitDao {
+        return habitDB.habitDao()
+    }
+
+
+    @Provides
     fun getContext(): Context = context
 
-//    @Singleton
-//    @Provides
-//    fun getHabitRepository(): HabitRepository {
-//        return HabitRepository()
-//    }
 }

@@ -16,14 +16,16 @@ data class Habit(
     val description: String,
     val type: Type,
     val priority: Priority,
-    val count: Int,
-    val interval: Interval
+    val intervalCount: Int,
+    val interval: Interval,
+    var count: Int,
+    val maxCount: Int
 ) : Parcelable {
     fun toHabitRemote(): HabitRemote {
         val priorityInt = if (priority == Priority.Low) 0 else 1
         val typeInt = if (type == Type.Useful) 1 else 0
         val intervalInt = if (interval == Interval.Day) 0 else if(interval == Interval.Week) 1 else 2
-        return HabitRemote(0, count,
+        return HabitRemote(0, intervalCount,
             Date().time, description, listOf(10), intervalInt, priorityInt, name, typeInt, id!!)
     }
 }

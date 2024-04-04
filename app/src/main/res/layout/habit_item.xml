@@ -95,13 +95,13 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/done_button"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:background="@android:color/transparent"
+        android:gravity="center"
         android:text="@string/done"
         android:textColor="@color/red"
-        android:gravity="center"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
 </LinearLayout>

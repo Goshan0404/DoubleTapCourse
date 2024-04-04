@@ -7,12 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.domain.model.Habit
 
-class HabitAdapter(private var habits: List<Habit>, private val itemClick: (habit: Habit, position: Int) -> Unit) :
+class HabitAdapter(
+    private var habits: List<Habit>,
+    private val itemClick: (habit: Habit) -> Unit,
+    private val doneClick: (habit: Habit) -> Unit
+) :
     RecyclerView.Adapter<HabitViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
         return HabitViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.habit_item, parent, false),
-            itemClick
+            itemClick, doneClick
         )
     }
 
@@ -32,7 +36,8 @@ class HabitAdapter(private var habits: List<Habit>, private val itemClick: (habi
     }
 }
 
-class HabitsDiffUtilCallback(private val oldList: List<Habit>, private val newList: List<Habit>): DiffUtil.Callback() {
+class HabitsDiffUtilCallback(private val oldList: List<Habit>, private val newList: List<Habit>) :
+    DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size
     }

@@ -1,5 +1,6 @@
 package com.example.doubletapcourse.presentation.fragments
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +10,6 @@ import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.domain.model.Habit
@@ -19,20 +17,16 @@ import com.example.doubletapcourse.domain.model.Interval
 import com.example.doubletapcourse.domain.model.Priority
 import com.example.doubletapcourse.domain.model.Type
 import com.example.doubletapcourse.databinding.FragmentAddHabitBinding
+import com.example.doubletapcourse.App
 import com.example.doubletapcourse.presentation.viewModel.AddHabitViewModel
+import javax.inject.Inject
 
 
 class AddHabitFragment : Fragment() {
 
     private var _binding: FragmentAddHabitBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: AddHabitViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return AddHabitViewModel(requireActivity().application) as T
-            }
-        }
-    }
+    @Inject lateinit var viewModel: AddHabitViewModel
 
 
     companion object {
@@ -50,6 +44,10 @@ class AddHabitFragment : Fragment() {
             }
     }
 
+    override fun onAttach(context: Context) {
+        (requireActivity().application as App).applicationComponent.habitComponent().create().inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,7 +74,7 @@ class AddHabitFragment : Fragment() {
         habit.let {
             binding.nameTextView.setText(it.name)
             binding.descriptionTextView.setText(it.description)
-            binding.countEditText.setText(it.count.toString())
+            binding.countEditText.setText(it.intervalCount.toString())
             binding.intervalSpinner.setText(it.interval.toString())
             binding.prioritySpinner.setText(it.priority.toString())
             when (it.type) {
@@ -125,7 +123,7 @@ class AddHabitFragment : Fragment() {
 //          if (name == null || description == null || type == null || priority == null || count == null || interval == null) {
 //        }
 
-            viewModel.currentHabit = Habit(id, name, description, type, priority, count, interval)
+            viewModel.currentHabit = Habit(id, name, description, type, priority, count, interval, 0, 10)
 
             viewModel.saveHabit {
                 findNavController().navigateUp()

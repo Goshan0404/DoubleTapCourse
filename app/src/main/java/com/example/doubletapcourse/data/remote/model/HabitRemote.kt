@@ -22,6 +22,6 @@ data class HabitRemote(
         val currentType = if (type == 1) Type.Useful else Type.UnUseful
         val currentPriority = if (priority == 0) Priority.Low else Priority.High
         val currentInterval = if (frequency == 0) Interval.Day else if (frequency == 1) Interval.Week else Interval.Mouth
-        return Habit(uid, title, description, currentType, currentPriority, count, currentInterval)
+        return Habit(uid, title, description, currentType, currentPriority, frequency, currentInterval, count, 10)
     }
 }

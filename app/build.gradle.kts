@@ -43,14 +43,13 @@ android {
 }
 
 dependencies {
-    kapt("groupId:artifactId:version")
 
 //    implementation("com.google.dagger:dagger-android:2.44")
 //    implementation ("com.google.dagger:dagger-android-support:2.44") // if you use the support libraries
 //    annotationProcessor ("com.google.dagger:dagger-android-processor:2.44")
 //    annotationProcessor ("com.google.dagger:dagger-compiler:2.44")
-    implementation ("com.google.dagger:dagger:2.44")
-    kapt ("com.google.dagger:dagger-compiler:2.44")
+    implementation ("com.google.dagger:dagger:2.51")
+    kapt ("com.google.dagger:dagger-compiler:2.48")
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 

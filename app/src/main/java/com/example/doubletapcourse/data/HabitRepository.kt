@@ -1,24 +1,21 @@
 package com.example.doubletapcourse.data
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.asLiveData
-import com.example.doubletapcourse.di.App
+import com.example.doubletapcourse.data.dataBase.HabitDao
+import com.example.doubletapcourse.data.remote.HabitAPI
 import com.example.doubletapcourse.domain.model.Habit
 import com.example.doubletapcourse.domain.model.Type
-import com.example.doubletapcourse.data.remote.ProviderHabitAPI
 import com.example.doubletapcourse.data.remote.model.ErrorResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class HabitRepository(application: Application) {
-    private var db = (application as App).getDb()
-    private val habitDao = db.habitDao()
-    private val habitApi = ProviderHabitAPI.habitApi
+class HabitRepository @Inject constructor(private val habitApi: HabitAPI, private val habitDao: HabitDao) {
 
     private val errorType = object : TypeToken<ErrorResponse>() {}.type
 
