@@ -7,18 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.RadioButton
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.domain.model.Habit
-import com.example.doubletapcourse.domain.model.Interval
-import com.example.doubletapcourse.domain.model.Priority
-import com.example.doubletapcourse.domain.model.Type
+import com.example.doubletapcourse.data.local.model.Habit
+import com.example.doubletapcourse.data.local.model.Type
 import com.example.doubletapcourse.databinding.FragmentAddHabitBinding
 import com.example.doubletapcourse.App
+import com.example.doubletapcourse.di.factory.AddHabitViewModelFactory
 import com.example.doubletapcourse.presentation.viewModel.AddHabitViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -26,26 +29,29 @@ class AddHabitFragment : Fragment() {
 
     private var _binding: FragmentAddHabitBinding? = null
     private val binding get() = _binding!!
-    @Inject lateinit var viewModel: AddHabitViewModel
+
+
+    private val viewModel: AddHabitViewModel by viewModels {
+        factory.create()
+    }
+
+    @Inject
+    lateinit var factory: AddHabitViewModelFactory
 
 
     companion object {
-        const val KEY: String = "key"
-        const val HABIT = "habit"
-        const val ADD_HABIT = "addHabit"
-        const val EDIT_HABIT = "editHabit"
+        const val HABIT_ID = "habit"
 
         fun newInstance(key: String, habit: Habit? = null) =
             AddHabitFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(HABIT, habit)
-                    putString(KEY, key)
                 }
             }
     }
 
     override fun onAttach(context: Context) {
-        (requireActivity().application as App).applicationComponent.habitComponent().create().inject(this)
+        (requireActivity().application as App).applicationComponent.habitComponent().create()
+            .inject(this)
         super.onAttach(context)
     }
 
@@ -61,12 +67,22 @@ class AddHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.getParcelable(HABIT, Habit::class.java)?.let { habit ->
+        arguments?.getParcelable(HABIT_ID, Habit::class.java)?.let { habit ->
             setViewsField(habit)
         }
+        setViewListeners()
 
+        lifecycleScope.launch {
+            viewModel.state.collect {
+                when (it) {
+                    is AddHabitFragmentState.NavigateUp -> findNavController().navigateUp()
+                    is AddHabitFragmentState.HabitExist -> setViewsField(it.habit)
+                    is AddHabitFragmentState.EmptyFields -> toastOnEmptyField()
+                    is AddHabitFragmentState.NoState -> {}
+                }
+            }
 
-        saveButtonListener(view)
+        }
     }
 
 
@@ -77,10 +93,13 @@ class AddHabitFragment : Fragment() {
             binding.countEditText.setText(it.intervalCount.toString())
             binding.intervalSpinner.setText(it.interval.toString())
             binding.prioritySpinner.setText(it.priority.toString())
-            when (it.type) {
-                Type.Useful -> binding.typeRadioGroup.check(R.id.useful_radioButton)
-                Type.UnUseful -> binding.typeRadioGroup.check(R.id.unuseful_radioButton)
-            }
+
+            if (it.type == Type.Useful)
+                binding.typeRadioGroup.check(R.id.useful_radioButton)
+
+            if (it.type == Type.Useful)
+                binding.typeRadioGroup.check(R.id.unuseful_radioButton)
+
 
             val intervalAdapter = ArrayAdapter(
                 requireActivity(),
@@ -103,36 +122,53 @@ class AddHabitFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun saveButtonListener(view: View) {
+    private fun setViewListeners() {
 
-        var id = ""
-        arguments?.getParcelable(HABIT, Habit::class.java)?.let { habit ->
-            id = habit.id!!
+        binding.countEditText.doOnTextChanged { text, _, _, _ ->
+            viewModel.countChanged(text)
+
         }
 
+        binding.nameTextView.doOnTextChanged { text, _, _, _ ->
+            viewModel.nameChanged(text)
+        }
+
+        binding.typeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            viewModel.typeChanged(checkedId)
+        }
+
+        binding.descriptionTextView.doOnTextChanged { text, _, _, _ ->
+            viewModel.descriptionChanged(text)
+        }
+
+        binding.prioritySpinner.doOnTextChanged { text, _, _, _ ->
+            viewModel.priorityChanged(text)
+        }
+
+        binding.intervalSpinner.doOnTextChanged { text, _, _, _ ->
+            viewModel.intervalChanged(text)
+        }
 
         binding.saveButton.setOnClickListener {
-            val name = binding.nameTextView.text.toString()
-            val description = binding.descriptionTextView.text.toString()
-            val type =
-                Type.valueOf((view.findViewById<RadioButton>(binding.typeRadioGroup.checkedRadioButtonId)).text.toString())
-            val priority = Priority.valueOf(binding.prioritySpinner.text.toString())
-            val count = binding.countEditText.text.toString().toInt()
-            val interval = Interval.valueOf(binding.intervalSpinner.text.toString())
-
-//          if (name == null || description == null || type == null || priority == null || count == null || interval == null) {
-//        }
-
-            viewModel.currentHabit = Habit(id, name, description, type, priority, count, interval, 0, 10)
-
-            viewModel.saveHabit {
-                findNavController().navigateUp()
-            }
+            viewModel.saveHabit()
         }
     }
+
+    fun toastOnEmptyField() {
+        Toast.makeText(context, "Empty Fields", Toast.LENGTH_SHORT).show()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    sealed class AddHabitFragmentState {
+        data object NoState : AddHabitFragmentState()
+        data object NavigateUp : AddHabitFragmentState()
+        data class HabitExist(val habit: Habit) : AddHabitFragmentState()
+        data object EmptyFields : AddHabitFragmentState()
+    }
+
 }

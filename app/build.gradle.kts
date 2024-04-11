@@ -40,14 +40,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
 }
+
 
 dependencies {
 
-//    implementation("com.google.dagger:dagger-android:2.44")
-//    implementation ("com.google.dagger:dagger-android-support:2.44") // if you use the support libraries
-//    annotationProcessor ("com.google.dagger:dagger-android-processor:2.44")
-//    annotationProcessor ("com.google.dagger:dagger-compiler:2.44")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+//    androidTestImplementation ("com.kaspersky.android-components:kaspresso:1.5")
+
     implementation ("com.google.dagger:dagger:2.51")
     kapt ("com.google.dagger:dagger-compiler:2.48")
 

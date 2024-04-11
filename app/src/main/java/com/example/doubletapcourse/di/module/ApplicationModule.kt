@@ -2,9 +2,11 @@ package com.example.doubletapcourse.di.module
 
 import android.content.Context
 import androidx.room.Room
-import com.example.doubletapcourse.data.dataBase.HabitDB
-import com.example.doubletapcourse.data.dataBase.HabitDao
+import com.example.doubletapcourse.data.HabitRepositoryImp
+import com.example.doubletapcourse.data.local.HabitDB
+import com.example.doubletapcourse.data.local.HabitDao
 import com.example.doubletapcourse.data.remote.HabitAPI
+import com.example.doubletapcourse.domain.HabitRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -56,6 +58,11 @@ class ApplicationModule(private val context: Context) {
     @Provides
     fun getHabitDao(habitDB: HabitDB): HabitDao {
         return habitDB.habitDao()
+    }
+
+    @Provides
+    fun getRepositoryImpl(habitAPI: HabitAPI, habitDao: HabitDao): HabitRepository {
+        return HabitRepositoryImp(habitAPI, habitDao)
     }
 
 

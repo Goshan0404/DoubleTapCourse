@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.databinding.FragmentPagerOfHabitListsBinding
+import com.example.doubletapcourse.data.local.model.Type
 
 
 class PagerOfHabitListsFragment : Fragment() {
@@ -41,8 +42,7 @@ class PagerOfHabitListsFragment : Fragment() {
 
         binding.addHabit.setOnClickListener {
             findNavController().navigate(
-                R.id.action_pagerOfHabitListsFragment_to_addHabitFragment,
-                Bundle().apply { putString(AddHabitFragment.KEY, AddHabitFragment.ADD_HABIT) })
+                R.id.action_pagerOfHabitListsFragment_to_addHabitFragment,)
         }
     }
 
@@ -59,8 +59,8 @@ class PagerOfHabitListsFragment : Fragment() {
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> HabitListFragment.newInstance(true)
-                else -> HabitListFragment.newInstance(false)
+                0 -> HabitListFragment.newInstance(Type.Useful)
+                else -> HabitListFragment.newInstance(Type.UnUseful)
             }
         }
 

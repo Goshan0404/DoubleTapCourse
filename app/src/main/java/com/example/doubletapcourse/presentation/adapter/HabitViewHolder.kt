@@ -1,11 +1,10 @@
 package com.example.doubletapcourse.presentation.adapter
 
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.domain.model.Habit
+import com.example.doubletapcourse.data.local.model.Habit
 
 class HabitViewHolder(
     itemView: View,

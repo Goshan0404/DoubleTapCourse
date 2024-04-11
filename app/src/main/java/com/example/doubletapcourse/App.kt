@@ -1,7 +1,6 @@
 package com.example.doubletapcourse
 
 import android.app.Application
-import com.example.doubletapcourse.data.dataBase.HabitDB
 import com.example.doubletapcourse.di.component.ApplicationComponent
 import com.example.doubletapcourse.di.component.DaggerApplicationComponent
 import com.example.doubletapcourse.di.module.ApplicationModule

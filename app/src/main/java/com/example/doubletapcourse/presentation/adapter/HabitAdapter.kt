@@ -5,14 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.domain.model.Habit
+import com.example.doubletapcourse.data.local.model.Habit
 
 class HabitAdapter(
-    private var habits: List<Habit>,
     private val itemClick: (habit: Habit) -> Unit,
     private val doneClick: (habit: Habit) -> Unit
 ) :
     RecyclerView.Adapter<HabitViewHolder>() {
+
+    private var habits = emptyList<Habit>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
         return HabitViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.habit_item, parent, false),

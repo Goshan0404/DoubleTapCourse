@@ -11,92 +11,60 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.example.doubletapcourse.R
-import com.example.doubletapcourse.domain.model.Habit
-import com.example.doubletapcourse.databinding.BottomSheetBinding
-import com.example.doubletapcourse.databinding.FragmentHabitListBinding
 import com.example.doubletapcourse.App
-import com.example.doubletapcourse.di.factory.ViewModelFactory
-import com.example.doubletapcourse.domain.model.Type
+import com.example.doubletapcourse.R
+import com.example.doubletapcourse.databinding.FragmentHabitListBinding
+import com.example.doubletapcourse.di.factory.HabitListViewModelFactory
+import com.example.doubletapcourse.data.local.model.Type
 import com.example.doubletapcourse.presentation.adapter.HabitAdapter
 import com.example.doubletapcourse.presentation.viewModel.HabitListViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 class HabitListFragment : Fragment() {
 
-
-    private var _binding: FragmentHabitListBinding? = null
-    private val binding get() = _binding!!
-
-    private val viewModel: HabitListViewModel by viewModels {
-        factory.create()
-    }
-    @Inject lateinit var factory: ViewModelFactory
-
-    private val bottomSheetFilter = BottomSheetFilter()
-
-
-    private var habits: List<Habit> = arrayListOf()
-
-    private val listAdapter: HabitAdapter = HabitAdapter(habits,
-        {
-            findNavController().navigate(
-                R.id.action_pagerOfHabitListsFragment_to_addHabitFragment,
-                Bundle().apply {
-                    putString(AddHabitFragment.KEY, AddHabitFragment.EDIT_HABIT)
-                    putParcelable(AddHabitFragment.HABIT, it)
-                }
-            )
-        }, {
-            doneButtonClicked(it)
-        })
-
-    private fun doneButtonClicked(it: Habit) {
-        it.count++
-        if (it.type == Type.UnUseful)
-            if (it.count < it.maxCount)
-                Toast.makeText(
-                    requireActivity(),
-                    "Можно выполнить еще ${it.maxCount - it.count} раз",
-                    Toast.LENGTH_SHORT
-                ).show()
-            else
-                Toast.makeText(requireActivity(), "Хватит это делать", Toast.LENGTH_SHORT)
-        else
-            if (it.count < it.maxCount)
-                Toast.makeText(
-                    requireActivity(),
-                    "Нужно выполнить еще ${it.maxCount - it.count}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            else
-                Toast.makeText(
-                    requireActivity(),
-                    "You are breathtaking!",
-                    Toast.LENGTH_SHORT
-                ).show()
-    }
-
-
     companion object {
-
         const val IS_POSITIVE_HABITS = "isPositiveHabits"
 
         @JvmStatic
-        fun newInstance(isPositiveHabits: Boolean) =
+        fun newInstance(type: Type) =
             HabitListFragment().apply {
                 arguments = Bundle().apply {
-                    putBoolean(IS_POSITIVE_HABITS, isPositiveHabits)
+                    putParcelable(IS_POSITIVE_HABITS, type)
                 }
             }
     }
 
+    private var _binding: FragmentHabitListBinding? = null
+
+    private val binding get() = _binding!!
+    private val viewModel: HabitListViewModel by viewModels {
+        factory.create()
+    }
+
+    @Inject
+    lateinit var factory: HabitListViewModelFactory
+
+    private val bottomSheetFilterFragment = BottomSheetFilterFragment()
+
+    private val listAdapter: HabitAdapter = HabitAdapter(
+        itemClick = {
+            findNavController().navigate(
+                R.id.action_pagerOfHabitListsFragment_to_addHabitFragment,
+                Bundle().apply {
+                    putString(AddHabitFragment.HABIT_ID, it.id)
+                }
+            )
+        },
+        doneClick = {
+            viewModel.doneButtonClicked(it)
+        })
+
 
     override fun onAttach(context: Context) {
-        (requireActivity().application as App).applicationComponent.habitComponent().create().inject(this)
+        (requireActivity().application as App).applicationComponent.habitComponent().create()
+            .inject(this)
         super.onAttach(context)
     }
 
@@ -111,21 +79,51 @@ class HabitListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            launch {
-                habits = viewModel.getHabits()
-            }.join()
-
-            setAdapter()
-        }
+        setAdapter()
 
         viewModel.currentTypeHabits.observe(requireActivity()) {
             listAdapter.setData(it)
         }
 
         binding.filterButton.setOnClickListener {
-            bottomSheetFilter.show(childFragmentManager, BottomSheetFilter.TAG)
+            bottomSheetFilterFragment.show(childFragmentManager, BottomSheetFilterFragment.TAG)
+        }
 
+        lifecycleScope.launch {
+            stateListener()
+        }
+    }
+
+    private suspend fun stateListener() {
+        viewModel.state.collect {
+            when (it) {
+                is HabitListFragmentState.MayDo ->
+                    Toast.makeText(
+                        requireActivity(),
+                        "Можно выполнить еще ${it.count} раз",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                is HabitListFragmentState.MustDo ->
+                    Toast.makeText(
+                        requireActivity(),
+                        "Нужно выполнить еще ${it.count}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                is HabitListFragmentState.StopDo ->
+                    Toast.makeText(requireActivity(), "Хватит это делать", Toast.LENGTH_SHORT)
+                        .show()
+
+                is HabitListFragmentState.Overfulfilled ->
+                    Toast.makeText(
+                        requireActivity(),
+                        "You are breathtaking!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                is HabitListFragmentState.NoState -> {}
+            }
         }
     }
 
@@ -143,48 +141,12 @@ class HabitListFragment : Fragment() {
         _binding = null
     }
 
-    class BottomSheetFilter : BottomSheetDialogFragment() {
-        private var _binding: BottomSheetBinding? = null
-        private val binding get() = _binding!!
-        private val viewModel: HabitListViewModel by viewModels(ownerProducer = { requireParentFragment() })
-
-        companion object {
-            const val TAG = "BottomSheetFilter"
-        }
-
-        override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            _binding = BottomSheetBinding.inflate(inflater, container, false)
-            return binding.root
-        }
-
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            super.onViewCreated(view, savedInstanceState)
-
-            binding.filterButton.setOnClickListener {
-
-                val name = if (!binding.nameSearchTextView.text.toString().isEmpty()) {
-                    binding.nameSearchTextView.text.toString()
-                } else
-                    null
-
-                val priority = if (!binding.prioritySearchSpinner.text.toString().isEmpty())
-                    binding.prioritySearchSpinner.text.toString()
-                else
-                    null
-
-                lifecycleScope.launch {
-
-                    viewModel.filterHabits(name, priority) {
-                        this@BottomSheetFilter.dismiss()
-                    }
-                }
-            }
-        }
-
+    sealed class HabitListFragmentState {
+        data object StopDo : HabitListFragmentState()
+        class MustDo(val count: Int) : HabitListFragmentState()
+        class MayDo(val count: Int) : HabitListFragmentState()
+        data object Overfulfilled : HabitListFragmentState()
+        data object NoState : HabitListFragmentState()
 
     }
 }

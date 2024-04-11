@@ -1,12 +1,11 @@
-package com.example.doubletapcourse.data.dataBase
+package com.example.doubletapcourse.data.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.doubletapcourse.domain.model.Habit
-import com.example.doubletapcourse.domain.model.Type
+import com.example.doubletapcourse.data.local.model.Habit
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,4 +18,6 @@ interface HabitDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(habit: Habit)
+    @Query("SELECT * FROM Habit WHERE id = :id")
+    fun geHabitById(id: String): LiveData<Habit?>
 }
