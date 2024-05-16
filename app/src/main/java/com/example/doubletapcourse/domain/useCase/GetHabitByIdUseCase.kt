@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class GetHabitByIdUseCase @Inject constructor(private val habitRepository: HabitRepository) {
 
-    suspend operator fun invoke(id: String): Flow<HabitDomain?> {
+    operator fun invoke(id: String): Flow<HabitDomain?> {
 
         return habitRepository.getHabitById(id)
     }

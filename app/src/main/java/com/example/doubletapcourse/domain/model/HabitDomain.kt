@@ -20,11 +20,12 @@ data class HabitDomain(
     fun toLocalHabit(): Habit {
         val currentType = if (type == 1) Type.Useful else Type.UnUseful
         val currentPriority = if (priority == 0) Priority.Low else Priority.High
-        val currentInterval = if (intervalCount == 0) Interval.Day else if (intervalCount == 1) Interval.Week else Interval.Mouth
+        val currentInterval = if (interval == 0) Interval.Day else if (interval == 1) Interval.Week else Interval.Mouth
         return Habit(id, name, description, currentType, currentPriority, intervalCount, currentInterval, count, maxCount)
     }
 
     fun toRemoteHabit(): HabitRemote {
-        return HabitRemote(0, count, interval.toLong(), description, listOf(), intervalCount, priority, name, type, id)
+
+        return HabitRemote(0, intervalCount, maxCount.toLong()+1, description, listOf(), interval, priority, name, type, id)
     }
 }

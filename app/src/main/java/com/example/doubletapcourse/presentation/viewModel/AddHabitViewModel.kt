@@ -19,9 +19,22 @@ import com.example.doubletapcourse.presentation.fragments.AddHabitFragment
 import com.example.doubletapcourse.presentation.fragments.AddHabitFragment.AddHabitFragmentState
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @ActivityScope
@@ -32,8 +45,10 @@ class AddHabitViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private var currentHabit: MutableLiveData<Habit?> =
-        MutableLiveData(
+    private var currentHabit =
+        if (handle.get<String>(AddHabitFragment.HABIT_ID) != null)
+            getHabitByIdUseCase(handle[AddHabitFragment.HABIT_ID]!!).mapLatest { it?.toLocalHabit() }
+        else flowOf(
             Habit(
                 "",
                 "",
@@ -47,6 +62,7 @@ class AddHabitViewModel @Inject constructor(
             )
         )
 
+
     private val _state: MutableStateFlow<AddHabitFragmentState> = MutableStateFlow(
         AddHabitFragmentState.NoState
     )
@@ -54,27 +70,24 @@ class AddHabitViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val id: String? = handle[AddHabitFragment.HABIT_ID]
-            id?.let {
-                currentHabit.postValue(getHabitByIdUseCase(it).asLiveData().value!!.toLocalHabit())
-                    currentHabit.value?.let {
-                        _state.value = AddHabitFragmentState.HabitExist(it)
-                    }
+
+            currentHabit.collect {
+                _state.value = AddHabitFragmentState.HabitExist(it!!)
             }
         }
     }
 
     fun saveHabit() {
         viewModelScope.launch {
-            val habit = currentHabit.value!!
-            if (habit.name.isEmpty() || habit.description.isEmpty() || habit.type == Type.NotChosen
-                || habit.priority == Priority.NotChosen || habit.intervalCount == 0 || habit.interval == Interval.NotChosen
-            ) {
-                _state.value = AddHabitFragmentState.EmptyFields
-                return@launch
-            }
+            currentHabit.first()?.let {
+                val habit = it
+                if (habit.name.isEmpty() || habit.description.isEmpty() || habit.type == Type.NotChosen
+                    || habit.priority == Priority.NotChosen || habit.intervalCount == 0 || habit.interval == Interval.NotChosen
+                ) {
+                    _state.value = AddHabitFragmentState.EmptyFields
+                    return@launch
+                }
 
-            currentHabit.value?.let {
                 saveHabitUseCase(it.toHabitDomain())
                 _state.value = AddHabitFragmentState.NavigateUp
             }
@@ -82,36 +95,48 @@ class AddHabitViewModel @Inject constructor(
     }
 
     fun countChanged(text: CharSequence?) {
-        if (text != null)
-            currentHabit.value?.intervalCount = text.toString().toInt()
+        viewModelScope.launch {
+            if (text != null)
+                currentHabit = currentHabit.map { it?.copy(count = text.toString().toInt()) }
+        }
     }
 
     fun nameChanged(text: CharSequence?) {
-        if (text != null)
-            currentHabit.value?.name = text.toString()
+        viewModelScope.launch {
+            if (text != null)
+                currentHabit = currentHabit.map { it?.copy(name = text.toString()) }
+        }
 
     }
 
     fun typeChanged(id: Int) {
-        when (id) {
-            R.id.useful_radioButton -> currentHabit.value?.type = Type.Useful
-            R.id.unuseful_radioButton -> currentHabit.value?.type = Type.UnUseful
+        viewModelScope.launch {
+            when (id) {
+                R.id.useful_radioButton -> currentHabit = currentHabit.map { it?.copy(type = Type.Useful) }
+                R.id.unuseful_radioButton -> currentHabit = currentHabit.map { it?.copy(type = Type.UnUseful) }
+            }
         }
     }
 
     fun descriptionChanged(text: CharSequence?) {
-        if (text != null)
-            currentHabit.value?.description = text.toString()
+        viewModelScope.launch {
+            if (text != null)
+                currentHabit = currentHabit.map { it?.copy(description = text.toString()) }
+        }
     }
 
     fun priorityChanged(text: CharSequence?) {
-        if (text != null)
-            currentHabit.value?.priority = Priority.valueOf(text.toString())
+        viewModelScope.launch {
+            if (text != null)
+                currentHabit = currentHabit.map { it?.copy(priority = Priority.valueOf(text.toString())) }
+        }
     }
 
     fun intervalChanged(text: CharSequence?) {
-        if (text != null)
-            currentHabit.value?.interval = Interval.valueOf(text.toString())
+        viewModelScope.launch {
+            if (text != null)
+                currentHabit = currentHabit.map { it?.copy(interval = Interval.valueOf(text.toString())) }
+        }
     }
 
     class ViewModelFactory @AssistedInject constructor(

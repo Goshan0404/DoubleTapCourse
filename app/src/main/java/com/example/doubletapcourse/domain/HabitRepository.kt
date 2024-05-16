@@ -9,5 +9,5 @@ interface HabitRepository {
     suspend fun getTypeHabits(type: Int): List<HabitDomain>
 
     suspend fun updateHabits()
-     fun getHabitById(id: String): Flow<HabitDomain?>
+    fun getHabitById(id: String): Flow<HabitDomain?>
 }

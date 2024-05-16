@@ -33,7 +33,7 @@ data class HabitRemote(
             description,
             currentType,
             currentPriority,
-            frequency,
+            count,
             currentInterval,
             count,
             10

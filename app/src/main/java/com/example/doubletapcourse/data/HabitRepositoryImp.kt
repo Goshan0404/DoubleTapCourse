@@ -17,6 +17,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
@@ -77,7 +80,8 @@ class HabitRepositoryImp(private val habitApi: HabitAPI, private val habitDao: H
         }
     }
 
-    override fun getHabitById(id: String): Flow<HabitDomain?> {
-        return habitDao.geHabitById(id).map { it?.toHabitDomain() }.asFlow()
+    override  fun getHabitById(id: String): Flow<HabitDomain?> {
+        return habitDao.geHabitById(id).mapLatest {  it?.toHabitDomain() }
+
     }
 }

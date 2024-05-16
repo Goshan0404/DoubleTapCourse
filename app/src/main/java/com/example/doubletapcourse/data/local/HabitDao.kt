@@ -18,6 +18,7 @@ interface HabitDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(habit: Habit)
+
     @Query("SELECT * FROM Habit WHERE id = :id")
-    fun geHabitById(id: String): LiveData<Habit?>
+    fun geHabitById(id: String): Flow<Habit?>
 }
