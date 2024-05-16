@@ -97,7 +97,7 @@ class AddHabitViewModel @Inject constructor(
     fun countChanged(text: CharSequence?) {
         viewModelScope.launch {
             if (text != null)
-                currentHabit = currentHabit.map { it?.copy(count = text.toString().toInt()) }
+                currentHabit = currentHabit.map { it?.copy(intervalCount = text.toString().toInt()) }
         }
     }
 

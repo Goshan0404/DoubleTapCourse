@@ -5,6 +5,7 @@ import com.example.doubletapcourse.data.local.model.Interval
 import com.example.doubletapcourse.data.local.model.Priority
 import com.example.doubletapcourse.data.local.model.Type
 import com.example.doubletapcourse.data.remote.model.HabitRemote
+import java.util.Date
 
 data class HabitDomain(
     var id: String,
@@ -26,6 +27,6 @@ data class HabitDomain(
 
     fun toRemoteHabit(): HabitRemote {
 
-        return HabitRemote(0, intervalCount, maxCount.toLong()+1, description, listOf(), interval, priority, name, type, id)
+        return HabitRemote(0, intervalCount, Date().time, description, listOf(), interval, priority, name, type, id)
     }
 }
