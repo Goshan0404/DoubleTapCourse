@@ -63,13 +63,20 @@ class AddHabitFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.getParcelable(HABIT_ID, Habit::class.java)?.let { habit ->
-            setViewsField(habit)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(HABIT_ID, Habit::class.java)?.let { habit ->
+                setViewsField(habit)
+            }
+        } else {
+            arguments?.getParcelable<Habit>(HABIT_ID)?.let {habit ->
+                setViewsField(habit)
+            }
         }
+
         setViewListeners()
 
         lifecycleScope.launch {
@@ -121,12 +128,10 @@ class AddHabitFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun setViewListeners() {
 
         binding.countEditText.doOnTextChanged { text, _, _, _ ->
             viewModel.countChanged(text)
-
         }
 
         binding.nameTextView.doOnTextChanged { text, _, _, _ ->

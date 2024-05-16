@@ -24,23 +24,19 @@ data class Habit(
     var maxCount: Int
 ) : Parcelable {
 
-    fun toHabitRemote(): HabitRemote {
-        return HabitRemote(0, intervalCount,
-            Date().time, description, listOf(10), interval.toInt(), priority.toInt(), name, type.toInt(), id
-        )
-    }
-
     fun toHabitDomain(): HabitDomain {
         return HabitDomain(id, name, description, type.toInt(), priority.toInt(), intervalCount, interval.toInt(), count, maxCount)
     }
 }
 
-enum class Interval {
+enum class Interval() {
     Week,
     Day,
     Mouth,
     NotChosen;
 
+
+// Убрать
     fun toInt(): Int {
         return if (this == Day) 0 else if (this == Week) 1 else 2
     }

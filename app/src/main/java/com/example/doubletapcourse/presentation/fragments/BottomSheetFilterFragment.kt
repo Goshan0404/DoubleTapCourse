@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.doubletapcourse.databinding.BottomSheetBinding
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 class BottomSheetFilterFragment : BottomSheetDialogFragment() {
     private var _binding: BottomSheetBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: HabitListViewModel by viewModels(ownerProducer = { requireParentFragment() })
+    private val viewModel: HabitListViewModel by activityViewModels ()
 
     companion object {
         const val TAG = "BottomSheetFilter"
@@ -43,12 +44,10 @@ class BottomSheetFilterFragment : BottomSheetDialogFragment() {
 
         binding.filterButton.setOnClickListener {
 
-            viewModel.filterHabits()
+//            viewModel.filterHabits()
 
             this.dismiss()
 
         }
     }
-
-
 }

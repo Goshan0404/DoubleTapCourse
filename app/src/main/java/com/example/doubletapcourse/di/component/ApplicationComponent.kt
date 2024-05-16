@@ -1,12 +1,13 @@
 package com.example.doubletapcourse.di.component
 
-import com.example.doubletapcourse.di.module.ApplicationModule
-import com.example.doubletapcourse.di.module.HabitSubComponentModule
+import com.example.doubletapcourse.di.module.DataBaseModule
+import com.example.doubletapcourse.di.module.HabitSubModule
+import com.example.doubletapcourse.di.module.RetrofitModule
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ApplicationModule::class, HabitSubComponentModule::class])
+@Component(modules = [DataBaseModule::class, HabitSubModule::class, RetrofitModule::class])
 interface ApplicationComponent {
 
     fun habitComponent(): HabitComponent.Factory

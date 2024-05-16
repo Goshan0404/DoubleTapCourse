@@ -7,16 +7,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.databinding.FragmentPagerOfHabitListsBinding
 import com.example.doubletapcourse.data.local.model.Type
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PagerOfHabitListsFragment : Fragment() {
     private var _binding: FragmentPagerOfHabitListsBinding? = null
     private val binding get() = _binding!!
 
+    private val bottomSheetFilterFragment = BottomSheetFilterFragment()
 
     companion object {
         @JvmStatic
@@ -42,7 +47,12 @@ class PagerOfHabitListsFragment : Fragment() {
 
         binding.addHabit.setOnClickListener {
             findNavController().navigate(
-                R.id.action_pagerOfHabitListsFragment_to_addHabitFragment,)
+                R.id.action_pagerOfHabitListsFragment_to_addHabitFragment,
+            )
+        }
+
+        binding.filterButton.setOnClickListener {
+            bottomSheetFilterFragment.show(childFragmentManager, BottomSheetFilterFragment.TAG)
         }
     }
 

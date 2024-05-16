@@ -16,20 +16,43 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-class HabitRepositoryImp (private val habitApi: HabitAPI, private val habitDao: HabitDao):
+class HabitRepositoryImp(private val habitApi: HabitAPI, private val habitDao: HabitDao) :
     HabitRepository {
 
     private val errorType = object : TypeToken<ErrorResponse>() {}.type
 
     override val habits = habitDao.getHabits().mapLatest { it.map { it.toHabitDomain() } }
 
-    init {
-        CoroutineScope(Dispatchers.Unconfined).launch {
+    override suspend fun save(habit: HabitDomain) {
+
+        withContext(Dispatchers.IO) {
+            val response = habitApi.putHabits(habit.toRemoteHabit())
+            if (response.isSuccessful) {
+                val id = response.body()?.uid
+
+                if (habit.id.isEmpty()) {
+                    habit.id = id!!
+                }
+
+            } else {
+                val errorResponse: ErrorResponse? =
+                    Gson().fromJson(response.errorBody()!!.charStream(), errorType)
+                Log.e("SAVE", "SAVE ERROR: ${errorResponse!!.message}")
+            }
+
+            habitDao.insert(habit.toLocalHabit())
+        }
+    }
+
+    override suspend fun updateHabits() {
+        withContext(Dispatchers.IO) {
             val response = habitApi.getHabits()
             if (response.isSuccessful) {
                 val habitsRemote = response.body()
@@ -43,37 +66,18 @@ class HabitRepositoryImp (private val habitApi: HabitAPI, private val habitDao: 
 
                 Log.e("GET", "GET ERROR: ${errorResponse!!.message}")
             }
-
-
         }
     }
 
-    override suspend fun save(habit: HabitDomain) {
-
-        val response = habitApi.putHabits(habit.toRemoteHabit())
-        if (response.isSuccessful) {
-            val id = response.body()?.uid
-
-            if (habit.id.isEmpty()) {
-                habit.id = id!!
-            }
-            habitDao.insert(habit.toLocalHabit())
-
-        } else {
-            val errorResponse: ErrorResponse? =
-                Gson().fromJson(response.errorBody()!!.charStream(), errorType)
-
-            Log.e("SAVE", "SAVE ERROR: ${errorResponse!!.message}")
-        }
-    }
 
     override suspend fun getTypeHabits(type: Int): List<HabitDomain> {
 
-        return habitDao.getHabitType(type.toString()).map { it.toHabitDomain() }
-
+        return withContext(Dispatchers.IO) {
+            habitDao.getHabitType(type.toString()).map { it.toHabitDomain() }
+        }
     }
 
-    override suspend fun getHabitById(id: String): Flow<HabitDomain?> {
+    override fun getHabitById(id: String): Flow<HabitDomain?> {
         return habitDao.geHabitById(id).map { it?.toHabitDomain() }.asFlow()
     }
 }
