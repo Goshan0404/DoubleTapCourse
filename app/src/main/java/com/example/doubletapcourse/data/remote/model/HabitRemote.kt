@@ -23,10 +23,10 @@ data class HabitRemote(
 
 
     fun toHabit(): Habit {
-        val currentType = if (type == 1) Type.Useful else Type.UnUseful
-        val currentPriority = if (priority == 0) Priority.Low else Priority.High
+        val currentType = if (type == Type.Useful.ordinal) Type.Useful else Type.UnUseful
+        val currentPriority = if (priority == Priority.Low.ordinal) Priority.Low else Priority.High
         val currentInterval =
-            if (frequency == 0) Interval.Day else if (frequency == 1) Interval.Week else Interval.Mouth
+            if (frequency == Interval.Day.ordinal) Interval.Day else if (frequency == Interval.Week.ordinal) Interval.Week else Interval.Mouth
         return Habit(
             uid,
             title,

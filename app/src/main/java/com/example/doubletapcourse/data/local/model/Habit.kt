@@ -25,31 +25,21 @@ data class Habit(
 ) : Parcelable {
 
     fun toHabitDomain(): HabitDomain {
-        return HabitDomain(id, name, description, type.toInt(), priority.toInt(), intervalCount, interval.toInt(), count, maxCount)
+        return HabitDomain(id, name, description, type.ordinal, priority.ordinal, intervalCount, interval.ordinal, count, maxCount)
     }
 }
 
-enum class Interval() {
+enum class Interval {
     Week,
     Day,
     Mouth,
     NotChosen;
-
-
-// Убрать
-    fun toInt(): Int {
-        return if (this == Day) 0 else if (this == Week) 1 else 2
-    }
 }
 
 enum class Priority {
     High,
     Low,
     NotChosen;
-
-    fun toInt(): Int {
-        return if (this == Low) 0 else 1
-    }
 }
 
 @Parcelize
