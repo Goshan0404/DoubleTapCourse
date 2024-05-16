@@ -20,10 +20,10 @@ class RetrofitModule {
             .addInterceptor(Interceptor { chain ->
                 val request = chain.request()
                 var response = chain.proceed(request)
-//                while (!response.isSuccessful) {
-//                    Thread.sleep(2000L)
-//                    response = chain.proceed(request)
-//                }
+                while (!response.isSuccessful) {
+                    Thread.sleep(2000L)
+                    response = chain.proceed(request)
+                }
                 response
             }
             )
