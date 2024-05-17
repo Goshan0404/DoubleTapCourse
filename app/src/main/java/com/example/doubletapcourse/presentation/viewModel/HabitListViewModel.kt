@@ -54,7 +54,7 @@ class HabitListViewModel @AssistedInject constructor(
 
 
     init {
-        updateHabits
+
 
         viewModelScope.launch {
             getAllHabitsUseCase().collect {

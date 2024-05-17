@@ -6,7 +6,7 @@ import com.example.doubletapcourse.domain.model.HabitDomain
 import javax.inject.Inject
 
 class SaveHabitUseCase @Inject constructor(private val habitRepository: HabitRepository) {
-    suspend operator fun invoke(habit: HabitDomain) {
-        habitRepository.save(habit)
+    suspend operator fun invoke(habit: HabitDomain): Boolean {
+        return habitRepository.save(habit)
     }
 }

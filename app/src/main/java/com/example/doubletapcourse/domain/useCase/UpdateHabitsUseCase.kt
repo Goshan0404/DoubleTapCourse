@@ -4,8 +4,8 @@ import com.example.doubletapcourse.domain.HabitRepository
 import javax.inject.Inject
 
 class UpdateHabitsUseCase @Inject constructor(private val repository: HabitRepository) {
-    suspend operator fun invoke() {
-        repository.updateHabits()
+    suspend operator fun invoke(): Boolean {
+        return repository.updateHabits()
     }
 
 }

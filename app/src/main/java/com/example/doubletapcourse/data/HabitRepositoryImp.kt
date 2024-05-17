@@ -33,43 +33,58 @@ class HabitRepositoryImp(private val habitApi: HabitAPI, private val habitDao: H
 
     override val habits = habitDao.getHabits().mapLatest { it.map { it.toHabitDomain() } }
 
-    override suspend fun save(habit: HabitDomain) {
+    override suspend fun save(habit: HabitDomain): Boolean {
+        var success = false
 
         withContext(Dispatchers.IO) {
-            val response = habitApi.putHabits(habit.toRemoteHabit())
-            if (response.isSuccessful) {
-                val id = response.body()?.uid
+            try {
+                val response = habitApi.putHabits(habit.toRemoteHabit())
+                if (response.isSuccessful) {
+                    success = true
 
-                if (habit.id.isEmpty()) {
-                    habit.id = id!!
+                    val id = response.body()?.uid
+
+                    if (habit.id.isEmpty()) {
+                        habit.id = id!!
+                    }
+                    habitDao.insert(habit.toLocalHabit())
+                } else {
+                    val errorResponse: ErrorResponse? =
+                        Gson().fromJson(response.errorBody()!!.charStream(), errorType)
+                    Log.e("SAVE", "SAVE ERROR: ${errorResponse!!.message}")
                 }
-
-            } else {
-                val errorResponse: ErrorResponse? =
-                    Gson().fromJson(response.errorBody()!!.charStream(), errorType)
-                Log.e("SAVE", "SAVE ERROR: ${errorResponse!!.message}")
+            } catch (ecxeptoin: Exception) {
+                success = false
+//                Log.e("SAVE", "SAVE ERROR: ${errorResponse!!.message}")
             }
-
-            habitDao.insert(habit.toLocalHabit())
         }
+        return success
+
     }
 
-    override suspend fun updateHabits() {
+    override suspend fun updateHabits(): Boolean {
+        var success = false
         withContext(Dispatchers.IO) {
-            val response = habitApi.getHabits()
-            if (response.isSuccessful) {
-                val habitsRemote = response.body()
+            try {
+                val response = habitApi.getHabits()
+                if (response.isSuccessful) {
+                    success = true
+                    val habitsRemote = response.body()
 
-                habitsRemote?.forEach {
-                    habitDao.insert(it.toHabit())
+                    habitsRemote?.forEach {
+                        habitDao.insert(it.toHabit())
+                    }
+                } else {
+                    val errorResponse: ErrorResponse? =
+                        Gson().fromJson(response.errorBody()!!.charStream(), errorType)
+
+                    Log.e("GET", "GET ERROR: ${errorResponse!!.message}")
                 }
-            } else {
-                val errorResponse: ErrorResponse? =
-                    Gson().fromJson(response.errorBody()!!.charStream(), errorType)
-
-                Log.e("GET", "GET ERROR: ${errorResponse!!.message}")
+            } catch (e: Exception) {
+                success = false
             }
         }
+         return success
     }
 
 
@@ -80,8 +95,8 @@ class HabitRepositoryImp(private val habitApi: HabitAPI, private val habitDao: H
         }
     }
 
-    override  fun getHabitById(id: String): Flow<HabitDomain?> {
-        return habitDao.geHabitById(id).mapLatest {  it?.toHabitDomain() }
+    override fun getHabitById(id: String): Flow<HabitDomain?> {
+        return habitDao.geHabitById(id).mapLatest { it?.toHabitDomain() }
 
     }
 }

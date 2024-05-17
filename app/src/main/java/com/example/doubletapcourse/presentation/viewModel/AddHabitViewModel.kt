@@ -88,7 +88,8 @@ class AddHabitViewModel @Inject constructor(
                     return@launch
                 }
 
-                saveHabitUseCase(it.toHabitDomain())
+                if (!saveHabitUseCase(it.toHabitDomain()))
+                    _state.value = AddHabitFragmentState.Error
                 _state.value = AddHabitFragmentState.NavigateUp
             }
         }
@@ -97,7 +98,8 @@ class AddHabitViewModel @Inject constructor(
     fun countChanged(text: CharSequence?) {
         viewModelScope.launch {
             if (text != null)
-                currentHabit = currentHabit.map { it?.copy(intervalCount = text.toString().toInt()) }
+                currentHabit =
+                    currentHabit.map { it?.copy(intervalCount = text.toString().toInt()) }
         }
     }
 
@@ -112,8 +114,11 @@ class AddHabitViewModel @Inject constructor(
     fun typeChanged(id: Int) {
         viewModelScope.launch {
             when (id) {
-                R.id.useful_radioButton -> currentHabit = currentHabit.map { it?.copy(type = Type.Useful) }
-                R.id.unuseful_radioButton -> currentHabit = currentHabit.map { it?.copy(type = Type.UnUseful) }
+                R.id.useful_radioButton -> currentHabit =
+                    currentHabit.map { it?.copy(type = Type.Useful) }
+
+                R.id.unuseful_radioButton -> currentHabit =
+                    currentHabit.map { it?.copy(type = Type.UnUseful) }
             }
         }
     }
@@ -128,14 +133,16 @@ class AddHabitViewModel @Inject constructor(
     fun priorityChanged(text: CharSequence?) {
         viewModelScope.launch {
             if (text != null)
-                currentHabit = currentHabit.map { it?.copy(priority = Priority.valueOf(text.toString())) }
+                currentHabit =
+                    currentHabit.map { it?.copy(priority = Priority.valueOf(text.toString())) }
         }
     }
 
     fun intervalChanged(text: CharSequence?) {
         viewModelScope.launch {
             if (text != null)
-                currentHabit = currentHabit.map { it?.copy(interval = Interval.valueOf(text.toString())) }
+                currentHabit =
+                    currentHabit.map { it?.copy(interval = Interval.valueOf(text.toString())) }
         }
     }
 

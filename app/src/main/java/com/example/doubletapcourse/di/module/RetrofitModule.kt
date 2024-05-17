@@ -25,8 +25,7 @@ class RetrofitModule {
                     response = chain.proceed(request)
                 }
                 response
-            }
-            )
+            })
             .build()
 
         return Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())

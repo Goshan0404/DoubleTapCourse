@@ -85,6 +85,7 @@ class AddHabitFragment : Fragment() {
                     is AddHabitFragmentState.NavigateUp -> findNavController().navigateUp()
                     is AddHabitFragmentState.HabitExist -> setViewsField(it.habit)
                     is AddHabitFragmentState.EmptyFields -> toastOnEmptyField()
+                    is AddHabitFragmentState.Error -> toastErrorRequest()
                     is AddHabitFragmentState.NoState -> {}
                 }
             }
@@ -159,8 +160,12 @@ class AddHabitFragment : Fragment() {
         }
     }
 
-    fun toastOnEmptyField() {
+    private fun toastOnEmptyField() {
         Toast.makeText(context, "Empty Fields", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun toastErrorRequest() {
+        Toast.makeText(context, "Error request", Toast.LENGTH_SHORT).show()
     }
 
 
@@ -173,6 +178,7 @@ class AddHabitFragment : Fragment() {
         data object NoState : AddHabitFragmentState()
         data object NavigateUp : AddHabitFragmentState()
         data class HabitExist(val habit: Habit) : AddHabitFragmentState()
+        data object Error: AddHabitFragmentState()
         data object EmptyFields : AddHabitFragmentState()
     }
 
