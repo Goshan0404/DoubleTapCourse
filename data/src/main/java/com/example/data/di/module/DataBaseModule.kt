@@ -1,4 +1,4 @@
-package com.example.doubletapcourse.di.module
+package com.example.data.di.module
 
 import android.content.Context
 import androidx.room.Room

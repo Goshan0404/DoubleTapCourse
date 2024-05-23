@@ -1,5 +1,9 @@
-package com.example.doubletapcourse.di.module
+package com.example.data.di.module
 
+import com.example.data.HabitRepositoryImp
+import com.example.data.local.HabitDao
+import com.example.data.remote.HabitAPI
+import com.example.doubletapcourse.domain.HabitRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -10,7 +14,6 @@ import javax.inject.Singleton
 
 @Module
 class RetrofitModule {
-
 
     @Singleton
     @Provides
@@ -31,6 +34,17 @@ class RetrofitModule {
         return Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .baseUrl("https://droid-test-server.doubletapp.ru/api/").build()
+    }
+
+    @Provides
+    fun getRepositoryImpl(habitAPI: HabitAPI, habitDao: HabitDao): HabitRepository {
+        return HabitRepositoryImp(habitAPI, habitDao)
+    }
+
+    @Singleton
+    @Provides
+    fun getHabitApi(retrofit: Retrofit): HabitAPI {
+        return retrofit.create(HabitAPI::class.java)
     }
 
 }

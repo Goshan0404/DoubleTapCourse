@@ -1,8 +1,8 @@
 package com.example.doubletapcourse.di.component
 
-import com.example.doubletapcourse.di.module.DataBaseModule
+import com.example.data.di.module.DataBaseModule
 import com.example.doubletapcourse.di.module.HabitSubModule
-import com.example.doubletapcourse.di.module.RetrofitModule
+import com.example.data.di.module.RetrofitModule
 import dagger.Component
 import javax.inject.Singleton
 
