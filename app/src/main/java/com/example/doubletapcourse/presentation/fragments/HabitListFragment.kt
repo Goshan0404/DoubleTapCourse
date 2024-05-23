@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,12 +17,11 @@ import com.example.doubletapcourse.App
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.databinding.FragmentHabitListBinding
 import com.example.doubletapcourse.di.factory.HabitListViewModelFactory
-import com.example.doubletapcourse.data.local.model.Type
 import com.example.doubletapcourse.presentation.adapter.HabitAdapter
+import com.example.doubletapcourse.presentation.model.Type
 import com.example.doubletapcourse.presentation.viewModel.HabitListViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

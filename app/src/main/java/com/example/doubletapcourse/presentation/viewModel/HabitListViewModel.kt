@@ -7,28 +7,22 @@ import androidx.lifecycle.viewModelScope
 import com.example.doubletapcourse.domain.useCase.FilterUseCase
 import com.example.doubletapcourse.domain.useCase.GetAllHabitsUseCase
 import com.example.doubletapcourse.domain.useCase.GetHabitsTypeUseCase
-import com.example.doubletapcourse.data.local.model.Habit
-import com.example.doubletapcourse.data.local.model.Priority
-import com.example.doubletapcourse.data.local.model.Type
-import com.example.doubletapcourse.domain.model.HabitDomain
 import com.example.doubletapcourse.domain.useCase.UpdateHabitsUseCase
-import com.example.doubletapcourse.presentation.fragments.HabitListFragment
 import com.example.doubletapcourse.presentation.fragments.HabitListFragment.HabitListFragmentState
-import dagger.assisted.Assisted
+import com.example.doubletapcourse.presentation.model.Habit
+import com.example.doubletapcourse.presentation.model.Priority
+import com.example.doubletapcourse.presentation.model.Type
+import com.example.doubletapcourse.utli.toLocalHabit
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 class HabitListViewModel @AssistedInject constructor(

@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.data.local.model.Habit
+import com.example.doubletapcourse.presentation.model.Habit
 
 class HabitViewHolder(
     itemView: View,
