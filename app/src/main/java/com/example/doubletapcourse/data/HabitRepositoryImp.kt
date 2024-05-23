@@ -47,7 +47,6 @@ class HabitRepositoryImp(private val habitApi: HabitAPI, private val habitDao: H
                     if (habit.id.isEmpty()) {
                         habit.id = id!!
                     }
-                    habitDao.insert(habit.toLocalHabit())
                 } else {
                     val errorResponse: ErrorResponse? =
                         Gson().fromJson(response.errorBody()!!.charStream(), errorType)
@@ -57,6 +56,7 @@ class HabitRepositoryImp(private val habitApi: HabitAPI, private val habitDao: H
                 success = false
 //                Log.e("SAVE", "SAVE ERROR: ${errorResponse!!.message}")
             }
+            habitDao.insert(habit.toLocalHabit())
         }
         return success
 

@@ -105,7 +105,7 @@ class AddHabitFragment : Fragment() {
             if (it.type == Type.Useful)
                 binding.typeRadioGroup.check(R.id.useful_radioButton)
 
-            if (it.type == Type.Useful)
+            if (it.type == Type.UnUseful)
                 binding.typeRadioGroup.check(R.id.unuseful_radioButton)
 
 
