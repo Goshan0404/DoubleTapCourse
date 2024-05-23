@@ -47,8 +47,4 @@ enum class Type: Parcelable {
     Useful,
     UnUseful,
     NotChosen;
-
-    fun toInt(): Int {
-        return if (this == Useful) 1 else 0
-    }
 }

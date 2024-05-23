@@ -54,15 +54,17 @@ class HabitListViewModel @AssistedInject constructor(
 
 
     init {
-
+        viewModelScope.launch {
+            updateHabits()
+        }
 
         viewModelScope.launch {
             getAllHabitsUseCase().collect {
 
-                _positiveHabitsType.emit(it.filter { it.type == Type.Useful.toInt() }
+                _positiveHabitsType.emit(it.filter { it.type == Type.Useful.ordinal }
                     .map { it.toLocalHabit() })
 
-                _negativeHabitsType.emit(it.filter { it.type == Type.UnUseful.toInt() }
+                _negativeHabitsType.emit(it.filter { it.type == Type.UnUseful.ordinal }
                     .map { it.toLocalHabit() })
 
             }
@@ -77,11 +79,11 @@ class HabitListViewModel @AssistedInject constructor(
                 launch {
 
                     launch {
-                        _positiveHabitsType.emit(getHabitsTypeUseCase(Type.Useful.toInt()).map { it.toLocalHabit() })
+                        _positiveHabitsType.emit(getHabitsTypeUseCase(Type.Useful.ordinal).map { it.toLocalHabit() })
                     }
 
                     launch {
-                        _negativeHabitsType.emit(getHabitsTypeUseCase(Type.UnUseful.toInt()).map { it.toLocalHabit() })
+                        _negativeHabitsType.emit(getHabitsTypeUseCase(Type.UnUseful.ordinal).map { it.toLocalHabit() })
                     }
                 }.join()
 
@@ -109,8 +111,8 @@ class HabitListViewModel @AssistedInject constructor(
 
 
     private suspend fun resetHabits() {
-        _positiveHabitsType.emit(getHabitsTypeUseCase(Type.Useful.toInt()).map { it.toLocalHabit() })
-        _negativeHabitsType.emit(getHabitsTypeUseCase(Type.UnUseful.toInt()).map { it.toLocalHabit() })
+        _positiveHabitsType.emit(getHabitsTypeUseCase(Type.Useful.ordinal).map { it.toLocalHabit() })
+        _negativeHabitsType.emit(getHabitsTypeUseCase(Type.UnUseful.ordinal).map { it.toLocalHabit() })
     }
 
     fun priorityChanged(text: CharSequence?) {
