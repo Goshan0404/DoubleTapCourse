@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "DoubleTapCourse"
 include(":app")
- 
+include(":domain")
+include(":data")

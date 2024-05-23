@@ -8,18 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.doubletapcourse.R
-import com.example.doubletapcourse.data.local.model.Habit
-import com.example.doubletapcourse.data.local.model.Type
-import com.example.doubletapcourse.databinding.FragmentAddHabitBinding
 import com.example.doubletapcourse.App
+import com.example.doubletapcourse.R
+import com.example.doubletapcourse.databinding.FragmentAddHabitBinding
 import com.example.doubletapcourse.di.factory.AddHabitViewModelFactory
+import com.example.doubletapcourse.presentation.model.Habit
+import com.example.doubletapcourse.presentation.model.Type
 import com.example.doubletapcourse.presentation.viewModel.AddHabitViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -72,7 +71,7 @@ class AddHabitFragment : Fragment() {
                 setViewsField(habit)
             }
         } else {
-            arguments?.getParcelable<Habit>(HABIT_ID)?.let {habit ->
+            arguments?.getParcelable<Habit>(HABIT_ID)?.let { habit ->
                 setViewsField(habit)
             }
         }

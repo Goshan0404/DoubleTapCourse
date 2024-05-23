@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.doubletapcourse.R
-import com.example.doubletapcourse.data.local.model.Habit
+import com.example.doubletapcourse.presentation.model.Habit
 
 class HabitAdapter(
     private val itemClick: (habit: Habit) -> Unit,

@@ -7,14 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.databinding.FragmentPagerOfHabitListsBinding
-import com.example.doubletapcourse.data.local.model.Type
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.doubletapcourse.presentation.model.Type
 
 
 class PagerOfHabitListsFragment : Fragment() {

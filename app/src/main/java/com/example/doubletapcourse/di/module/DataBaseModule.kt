@@ -2,8 +2,8 @@ package com.example.doubletapcourse.di.module
 
 import android.content.Context
 import androidx.room.Room
-import com.example.doubletapcourse.data.local.HabitDB
-import com.example.doubletapcourse.data.local.HabitDao
+import com.example.data.local.HabitDB
+import com.example.data.local.HabitDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

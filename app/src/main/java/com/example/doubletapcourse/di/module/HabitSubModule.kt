@@ -1,8 +1,9 @@
 package com.example.doubletapcourse.di.module
 
-import com.example.doubletapcourse.data.HabitRepositoryImp
-import com.example.doubletapcourse.data.local.HabitDao
-import com.example.doubletapcourse.data.remote.HabitAPI
+
+import com.example.data.HabitRepositoryImp
+import com.example.data.local.HabitDao
+import com.example.data.remote.HabitAPI
 import com.example.doubletapcourse.di.component.HabitComponent
 import com.example.doubletapcourse.domain.HabitRepository
 import dagger.Module
