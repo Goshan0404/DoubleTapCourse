@@ -79,13 +79,16 @@ class HabitListFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setAdapter()
 
-        val type = arguments?.getParcelable(IS_POSITIVE_HABITS, Type::class.java)!!
+        val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(IS_POSITIVE_HABITS, Type::class.java)!!
+        } else {
+            arguments?.getParcelable(IS_POSITIVE_HABITS)!!
+        }
 
         CoroutineScope(Dispatchers.Main).launch {
             viewModel.getHabits(type)
@@ -95,35 +98,36 @@ class HabitListFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            stateListener()
+            doneButtonState(type)
         }
     }
 
-    private suspend fun stateListener() {
-        viewModel.state.collect {
+    private suspend fun doneButtonState(type: Type) {
+        viewModel.getState(type).collect() {
             when (it) {
                 is HabitListFragmentState.MayDo ->
                     Toast.makeText(
-                        requireActivity(),
-                        "Можно выполнить еще ${it.count} раз",
+                        context,
+                        getString(R.string.may_do_more, it.count.toString()),
                         Toast.LENGTH_SHORT
                     ).show()
 
                 is HabitListFragmentState.MustDo ->
                     Toast.makeText(
-                        requireActivity(),
-                        "Нужно выполнить еще ${it.count}",
+                        context,
+                        getString(R.string.have_do_more, it.count.toString()),
                         Toast.LENGTH_SHORT
                     ).show()
 
                 is HabitListFragmentState.StopDo ->
-                    Toast.makeText(requireActivity(), "Хватит это делать", Toast.LENGTH_SHORT)
+                    Toast.makeText(context,
+                        getString(R.string.stop_do), Toast.LENGTH_SHORT)
                         .show()
 
                 is HabitListFragmentState.Overfulfilled ->
                     Toast.makeText(
-                        requireActivity(),
-                        "You are breathtaking!",
+                        context,
+                        getString(R.string.you_are_breathtaking),
                         Toast.LENGTH_SHORT
                     ).show()
 

@@ -18,6 +18,6 @@ data class HabitData(
 ) {
 
     fun toHabitDomain(): HabitDomain {
-        return HabitDomain(uid, title, description, type, priority, frequency%10, frequency/10, count, 10)
+        return HabitDomain(uid, title, description, type, priority, frequency%10, frequency/10, count, 3)
     }
 }

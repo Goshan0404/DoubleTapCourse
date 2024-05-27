@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.doubletapcourse.domain.useCase.FilterUseCase
 import com.example.doubletapcourse.domain.useCase.GetAllHabitsUseCase
 import com.example.doubletapcourse.domain.useCase.GetHabitsTypeUseCase
+import com.example.doubletapcourse.domain.useCase.SaveHabitUseCase
 import com.example.doubletapcourse.domain.useCase.UpdateHabitsUseCase
 import com.example.doubletapcourse.presentation.fragments.HabitListFragment.HabitListFragmentState
 import com.example.doubletapcourse.presentation.model.Habit
@@ -17,11 +18,9 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 
@@ -29,23 +28,23 @@ class HabitListViewModel @AssistedInject constructor(
     private val getAllHabitsUseCase: GetAllHabitsUseCase,
     private val getHabitsTypeUseCase: GetHabitsTypeUseCase,
     private val updateHabits: UpdateHabitsUseCase,
+    private val saveHabitUseCase: SaveHabitUseCase,
     private val filterUseCase: FilterUseCase,
 ) : ViewModel() {
-
 
     private val _positiveHabitsType = MutableSharedFlow<List<Habit>>()
     private val _negativeHabitsType = MutableSharedFlow<List<Habit>>()
 
-
     private var nameFilter = MutableSharedFlow<String>()
     private var priorityFilter = MutableSharedFlow<Priority>()
 
-    private val _state: MutableStateFlow<HabitListFragmentState> =
-        MutableStateFlow(
-            HabitListFragmentState.NoState
+    private val _stateOfPositive =
+        MutableSharedFlow<HabitListFragmentState>(
         )
-    val state: StateFlow<HabitListFragmentState> = _state
 
+    private val _stateOfNegative =
+        MutableSharedFlow<HabitListFragmentState>(
+        )
 
     init {
         viewModelScope.launch {
@@ -60,7 +59,6 @@ class HabitListViewModel @AssistedInject constructor(
 
                 _negativeHabitsType.emit(it.filter { it.type == Type.UnUseful.ordinal }
                     .map { it.toLocalHabit() })
-
             }
 
         }
@@ -68,10 +66,7 @@ class HabitListViewModel @AssistedInject constructor(
         viewModelScope.launch {
 
             nameFilter.collect { name ->
-
-
                 launch {
-
                     launch {
                         _positiveHabitsType.emit(getHabitsTypeUseCase(Type.Useful.ordinal).map { it.toLocalHabit() })
                     }
@@ -91,8 +86,6 @@ class HabitListViewModel @AssistedInject constructor(
                         .mapLatest { it.filter { it.name == name } }.last()
                 )
             }
-
-
         }
     }
 
@@ -103,6 +96,12 @@ class HabitListViewModel @AssistedInject constructor(
             _negativeHabitsType
     }
 
+    fun getState(type: Type): MutableSharedFlow<HabitListFragmentState> {
+        return if (type == Type.Useful)
+            _stateOfPositive
+        else
+            _stateOfNegative
+    }
 
     private suspend fun resetHabits() {
         _positiveHabitsType.emit(getHabitsTypeUseCase(Type.Useful.ordinal).map { it.toLocalHabit() })
@@ -126,23 +125,31 @@ class HabitListViewModel @AssistedInject constructor(
     }
 
     fun doneButtonClicked(habit: Habit) {
-        habit.count++
-        if (habit.type == Type.UnUseful)
-            if (habit.count < habit.maxCount)
-                _state.value = HabitListFragmentState.MayDo(habit.maxCount - habit.count)
-            else
-                _state.value = HabitListFragmentState.StopDo
-        else
-            if (habit.count < habit.maxCount)
-                _state.value = HabitListFragmentState.MustDo(habit.maxCount - habit.count)
-            else
-                _state.value = HabitListFragmentState.Overfulfilled
+        viewModelScope.launch {
+            habit.count++
+            if (habit.type == Type.UnUseful) {
+                if (habit.count < habit.maxCount) {
+                    _stateOfNegative.emit(HabitListFragmentState.MayDo(habit.maxCount - habit.count))
+                    saveHabitUseCase(habit.toHabitDomain())
+                } else
+                    _stateOfNegative.emit(HabitListFragmentState.StopDo)
+            } else {
+                if (habit.count < habit.maxCount) {
+                    _stateOfPositive.emit(HabitListFragmentState.MustDo(habit.maxCount - habit.count))
+                    saveHabitUseCase(habit.toHabitDomain())
+                } else {
+                    _stateOfPositive.emit(HabitListFragmentState.Overfulfilled)
+                    saveHabitUseCase(habit.toHabitDomain())
+                }
+            }
+        }
     }
 
     class SavedStateViewModelFactory @AssistedInject constructor(
         private val getAllHabitsUseCase: GetAllHabitsUseCase,
         private val getHabitsTypeUseCase: GetHabitsTypeUseCase,
         private val updateHabits: UpdateHabitsUseCase,
+        private val saveHabitUseCase: SaveHabitUseCase,
         private val filterUseCase: FilterUseCase,
     ) :
         AbstractSavedStateViewModelFactory() {
@@ -155,6 +162,7 @@ class HabitListViewModel @AssistedInject constructor(
                 getAllHabitsUseCase,
                 getHabitsTypeUseCase,
                 updateHabits,
+                saveHabitUseCase,
                 filterUseCase
             ) as T
         }

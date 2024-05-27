@@ -6,6 +6,8 @@ import com.example.data.local.HabitData
 import com.example.data.remote.HabitAPI
 import com.example.data.remote.model.ErrorResponse
 import com.example.data.remote.model.HabitRemote
+import com.example.data.util.toHabitData
+import com.example.data.util.toHabitRemote
 import com.example.doubletapcourse.domain.HabitRepository
 import com.example.doubletapcourse.domain.model.HabitDomain
 import com.google.gson.Gson
@@ -92,13 +94,3 @@ class HabitRepositoryImp(private val habitApi: HabitAPI, private val habitDao: H
     }
 }
 
-fun HabitDomain.toHabitData(): HabitData {
-
-    return HabitData(intervalCount, Date().time, description, interval, priority, name, type, id)
-}
-
-
-fun HabitDomain.toHabitRemote(): HabitRemote {
-
-    return HabitRemote(0, intervalCount, Date().time, description, listOf(), interval, priority, name, type, id)
-}

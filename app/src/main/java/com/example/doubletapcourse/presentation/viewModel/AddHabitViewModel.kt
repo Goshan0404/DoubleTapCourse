@@ -46,7 +46,7 @@ class AddHabitViewModel @Inject constructor(
                 0,
                 Interval.NotChosen,
                 0,
-                0
+                10
             )
         )
 

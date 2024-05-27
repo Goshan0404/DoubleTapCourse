@@ -9,6 +9,9 @@
     <string name="count">Count</string>
     <string name="interval">Interval</string>
     <string name="habit_times">%1$s in %2$s</string>
+    <string name="may_do_more">Можно выполнить еще %1$s раз</string>
+    <string name="have_do_more">Нужно выполнить еще %1$s раз</string>
+
     <string name="habits">Habits</string>
 
 
@@ -33,4 +36,6 @@
     <string name="name">Name</string>
     <string name="positive_habits">Positive Habits</string>
     <string name="done">done</string>
+    <string name="stop_do">Хватит это делать</string>
+    <string name="you_are_breathtaking">You are breathtaking!</string>
 </resources>
