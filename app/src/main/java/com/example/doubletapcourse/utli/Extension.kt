@@ -9,6 +9,29 @@ import com.example.doubletapcourse.presentation.model.Type
 fun HabitDomain.toLocalHabit(): Habit {
     val currentType = if (type == 0) Type.Useful else Type.UnUseful
     val currentPriority = if (priority == 0) Priority.Low else Priority.High
-    val currentInterval = if (interval == 0) Interval.Day else if (interval == 1) Interval.Week else Interval.Mouth
-    return Habit(id, name, description, currentType, currentPriority, intervalCount, currentInterval, count, maxCount)
+    val currentInterval =
+        if (interval == 0) Interval.Day else if (interval == 1) Interval.Week else Interval.Mouth
+    return Habit(
+        id,
+        name,
+        description,
+        currentType,
+        currentPriority,
+        intervalCount,
+        currentInterval,
+        count,
+        maxCount
+    )
 }
+
+fun Habit.toHabitDomain() = HabitDomain(
+    id = id,
+    name = name,
+    description = description,
+    type = type.ordinal,
+    priority = priority.ordinal,
+    intervalCount = intervalCount,
+    interval = interval.ordinal,
+    count = count,
+    maxCount = maxCount
+)

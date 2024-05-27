@@ -19,12 +19,7 @@ data class Habit(
     var interval: Interval,
     var count: Int,
     var maxCount: Int
-) : Parcelable {
-
-    fun toHabitDomain(): HabitDomain {
-        return HabitDomain(id, name, description, type.ordinal, priority.ordinal, intervalCount, interval.ordinal, count, maxCount)
-    }
-}
+) : Parcelable
 
 enum class Interval {
     Week,
@@ -34,8 +29,8 @@ enum class Interval {
 }
 
 enum class Priority {
-    High,
     Low,
+    High,
     NotChosen;
 }
 
