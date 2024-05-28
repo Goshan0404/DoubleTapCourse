@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.domain.useCase.DoneHabitUseCase
+import com.example.domain.useCase.DoneState
 import com.example.doubletapcourse.App
 import com.example.doubletapcourse.R
 import com.example.doubletapcourse.databinding.FragmentHabitListBinding
@@ -52,7 +53,6 @@ class HabitListFragment : Fragment() {
     lateinit var factory: HabitListViewModelFactory
 
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private val listAdapter: HabitAdapter = HabitAdapter(
         itemClick = {
             findNavController().navigate(
@@ -63,7 +63,13 @@ class HabitListFragment : Fragment() {
             )
         },
         doneClick = {
-            viewModel.doneButtonClicked(it, arguments?.getParcelable(IS_POSITIVE_HABITS, Type::class.java)!!)
+            val type =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                    arguments?.getParcelable(IS_POSITIVE_HABITS, Type::class.java)!!
+                else
+                    arguments?.getParcelable(IS_POSITIVE_HABITS)!!
+            viewModel.doneButtonClicked(it, type)
+
         })
 
 
@@ -81,7 +87,6 @@ class HabitListFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -106,28 +111,30 @@ class HabitListFragment : Fragment() {
     }
 
     private suspend fun doneButtonState(type: Type) {
-        viewModel.getState(type).collect() {
+        viewModel.getState(type).collect {
             when (it) {
-                is DoneHabitUseCase.DoneState.PositiveHabitDoneLess ->
+                is DoneState.PositiveHabitDoneLess ->
                     Toast.makeText(
                         context,
                         getString(R.string.have_do_more, it.count.toString()),
                         Toast.LENGTH_SHORT
                     ).show()
 
-                is DoneHabitUseCase.DoneState.NegativeHabitDoneLess ->
+                is DoneState.NegativeHabitDoneLess ->
                     Toast.makeText(
                         context,
                         getString(R.string.may_do_more, it.count.toString()),
                         Toast.LENGTH_SHORT
                     ).show()
 
-                is DoneHabitUseCase.DoneState.NegativeHabitDoneOverFlow ->
-                    Toast.makeText(context,
-                        getString(R.string.stop_do), Toast.LENGTH_SHORT)
+                is DoneState.NegativeHabitDoneOverFlow ->
+                    Toast.makeText(
+                        context,
+                        getString(R.string.stop_do), Toast.LENGTH_SHORT
+                    )
                         .show()
 
-                is DoneHabitUseCase.DoneState.PositiveHabitDoneOverFlow ->
+                is DoneState.PositiveHabitDoneOverFlow ->
                     Toast.makeText(
                         context,
                         getString(R.string.you_are_breathtaking),
@@ -151,14 +158,5 @@ class HabitListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    sealed class HabitListFragmentState {
-        data object StopDo : HabitListFragmentState()
-        class MustDo(val count: Int) : HabitListFragmentState()
-        class MayDo(val count: Int) : HabitListFragmentState()
-        data object Overfulfilled : HabitListFragmentState()
-        data object NoState : HabitListFragmentState()
-
     }
 }

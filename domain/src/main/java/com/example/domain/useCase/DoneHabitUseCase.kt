@@ -11,25 +11,15 @@ class DoneHabitUseCase @Inject constructor(private val saveHabitUseCase: SaveHab
         saveHabitUseCase(habit)
 
         return if (habit.type == NEGATIVE_TYPE_NUMBER) {
-            if (habit.count < habit.maxCount) {
+            if (habit.count < habit.maxCount)
                 DoneState.NegativeHabitDoneLess(habit.maxCount - habit.count)
-            } else
+            else
                 DoneState.NegativeHabitDoneOverFlow
-        } else {
-            if (habit.count < habit.maxCount) {
+        } else
+            if (habit.count < habit.maxCount)
                 DoneState.PositiveHabitDoneLess(habit.maxCount - habit.count)
-            } else {
+            else
                 DoneState.PositiveHabitDoneOverFlow
-            }
-        }
-    }
-
-    sealed class DoneState() {
-        data object PositiveHabitDoneOverFlow : DoneState()
-        class PositiveHabitDoneLess(val count: Int) : DoneState()
-        data object NegativeHabitDoneOverFlow : DoneState()
-        class NegativeHabitDoneLess(val count: Int) : DoneState()
-        data object NoState : DoneState()
-
     }
 }
+

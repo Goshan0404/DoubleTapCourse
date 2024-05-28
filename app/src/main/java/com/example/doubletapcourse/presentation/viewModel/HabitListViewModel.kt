@@ -5,12 +5,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.useCase.DoneHabitUseCase
-import com.example.domain.useCase.DoneHabitUseCase.DoneState
+import com.example.domain.useCase.DoneState
 import com.example.doubletapcourse.domain.useCase.GetAllHabitsUseCase
 import com.example.doubletapcourse.domain.useCase.GetHabitsTypeUseCase
 import com.example.doubletapcourse.domain.useCase.SaveHabitUseCase
 import com.example.doubletapcourse.domain.useCase.UpdateHabitsUseCase
-import com.example.doubletapcourse.presentation.fragments.HabitListFragment.HabitListFragmentState
 import com.example.doubletapcourse.presentation.model.Habit
 import com.example.doubletapcourse.presentation.model.Priority
 import com.example.doubletapcourse.presentation.model.Type
@@ -61,7 +60,6 @@ class HabitListViewModel @AssistedInject constructor(
         }
 
         viewModelScope.launch {
-
             nameFilter.collect { name ->
                 launch {
                     launch {
@@ -101,7 +99,6 @@ class HabitListViewModel @AssistedInject constructor(
 
     fun priorityChanged(text: CharSequence?) {
         if (text != null && text.toString().isNotEmpty())
-
             viewModelScope.launch {
                 priorityFilter.emit(Priority.valueOf(text.toString()))
             }
@@ -109,7 +106,6 @@ class HabitListViewModel @AssistedInject constructor(
 
     fun nameSearchChanged(text: CharSequence?) {
         if (text != null && text.toString().isNotEmpty())
-
             viewModelScope.launch {
                 nameFilter.emit(text.toString())
             }
@@ -121,7 +117,6 @@ class HabitListViewModel @AssistedInject constructor(
                 _stateOfPositive.emit(doneHabitUseCase(habit.toHabitDomain()))
             else
                 _stateOfNegative.emit(doneHabitUseCase(habit.toHabitDomain()))
-
         }
     }
 
