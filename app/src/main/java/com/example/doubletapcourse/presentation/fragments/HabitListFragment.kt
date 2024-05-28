@@ -64,10 +64,11 @@ class HabitListFragment : Fragment() {
         },
         doneClick = {
             val type =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     arguments?.getParcelable(IS_POSITIVE_HABITS, Type::class.java)!!
-                else
+                } else {
                     arguments?.getParcelable(IS_POSITIVE_HABITS)!!
+                }
             viewModel.doneButtonClicked(it, type)
 
         })

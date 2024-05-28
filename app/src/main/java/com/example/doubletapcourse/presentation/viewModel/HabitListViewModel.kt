@@ -113,10 +113,11 @@ class HabitListViewModel @AssistedInject constructor(
 
     fun doneButtonClicked(habit: Habit, type: Type) {
         viewModelScope.launch {
-            if (type == Type.Useful)
+            if (type == Type.Useful) {
                 _stateOfPositive.emit(doneHabitUseCase(habit.toHabitDomain()))
-            else
+            } else {
                 _stateOfNegative.emit(doneHabitUseCase(habit.toHabitDomain()))
+            }
         }
     }
 
