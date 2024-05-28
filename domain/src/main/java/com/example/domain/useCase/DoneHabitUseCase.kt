@@ -2,8 +2,9 @@ package com.example.domain.useCase
 
 import com.example.doubletapcourse.domain.model.HabitDomain
 import com.example.doubletapcourse.domain.useCase.SaveHabitUseCase
+import javax.inject.Inject
 
-class DoneHabitUseCase(private val saveHabitUseCase: SaveHabitUseCase) {
+class DoneHabitUseCase @Inject constructor(private val saveHabitUseCase: SaveHabitUseCase) {
     private val NEGATIVE_TYPE_NUMBER = 1
     suspend operator fun invoke(habit: HabitDomain): DoneState {
         habit.count++
@@ -11,14 +12,14 @@ class DoneHabitUseCase(private val saveHabitUseCase: SaveHabitUseCase) {
 
         return if (habit.type == NEGATIVE_TYPE_NUMBER) {
             if (habit.count < habit.maxCount) {
-                DoneState.PositiveHabitDoneLess(habit.maxCount - habit.count)
+                DoneState.NegativeHabitDoneLess(habit.maxCount - habit.count)
             } else
-                DoneState.PositiveHabitDoneOverFlow
+                DoneState.NegativeHabitDoneOverFlow
         } else {
             if (habit.count < habit.maxCount) {
-                DoneState.NegativeHabitDoneLess(habit.maxCount - habit.count)
+                DoneState.PositiveHabitDoneLess(habit.maxCount - habit.count)
             } else {
-                DoneState.NegativeHabitDoneOverFlow
+                DoneState.PositiveHabitDoneOverFlow
             }
         }
     }

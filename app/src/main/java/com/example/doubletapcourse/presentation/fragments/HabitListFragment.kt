@@ -111,14 +111,14 @@ class HabitListFragment : Fragment() {
                 is DoneHabitUseCase.DoneState.PositiveHabitDoneLess ->
                     Toast.makeText(
                         context,
-                        getString(R.string.may_do_more, it.count.toString()),
+                        getString(R.string.have_do_more, it.count.toString()),
                         Toast.LENGTH_SHORT
                     ).show()
 
                 is DoneHabitUseCase.DoneState.NegativeHabitDoneLess ->
                     Toast.makeText(
                         context,
-                        getString(R.string.have_do_more, it.count.toString()),
+                        getString(R.string.may_do_more, it.count.toString()),
                         Toast.LENGTH_SHORT
                     ).show()
 

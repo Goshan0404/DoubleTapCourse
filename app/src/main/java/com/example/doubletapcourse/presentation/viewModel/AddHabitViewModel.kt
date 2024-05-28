@@ -14,6 +14,7 @@ import com.example.doubletapcourse.presentation.model.Habit
 import com.example.doubletapcourse.presentation.model.Interval
 import com.example.doubletapcourse.presentation.model.Priority
 import com.example.doubletapcourse.presentation.model.Type
+import com.example.doubletapcourse.utli.toHabitDomain
 import com.example.doubletapcourse.utli.toLocalHabit
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
