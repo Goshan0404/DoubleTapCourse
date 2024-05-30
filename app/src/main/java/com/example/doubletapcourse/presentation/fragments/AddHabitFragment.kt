@@ -95,8 +95,8 @@ class AddHabitFragment : Fragment() {
 
     private fun setViewsField(habit: Habit) {
         habit.let {
-            binding.nameTextView.setText(it.name)
-            binding.descriptionTextView.setText(it.description)
+            binding.habitNameTextView.setText(it.name)
+            binding.habitDescriptionTextView.setText(it.description)
             binding.countEditText.setText(it.intervalCount.toString())
             binding.intervalSpinner.setText(it.interval.toString())
             binding.prioritySpinner.setText(it.priority.toString())
@@ -134,7 +134,7 @@ class AddHabitFragment : Fragment() {
             viewModel.countChanged(text)
         }
 
-        binding.nameTextView.doOnTextChanged { text, _, _, _ ->
+        binding.habitNameTextView.doOnTextChanged { text, _, _, _ ->
             viewModel.nameChanged(text)
         }
 
@@ -142,7 +142,7 @@ class AddHabitFragment : Fragment() {
             viewModel.typeChanged(checkedId)
         }
 
-        binding.descriptionTextView.doOnTextChanged { text, _, _, _ ->
+        binding.habitDescriptionTextView.doOnTextChanged { text, _, _, _ ->
             viewModel.descriptionChanged(text)
         }
 

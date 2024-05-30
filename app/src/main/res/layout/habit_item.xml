@@ -20,7 +20,7 @@
 
 
         <TextView
-            android:id="@+id/name_textView"
+            android:id="@+id/habit_name_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name"
@@ -29,7 +29,7 @@
             tools:layout_editor_absoluteY="16dp" />
 
         <TextView
-            android:id="@+id/description_textView"
+            android:id="@+id/habit_description_textView"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"

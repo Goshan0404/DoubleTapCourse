@@ -12,8 +12,8 @@ class HabitViewHolder(
     private val doneClick: (habit: Habit) -> Unit
 ) : RecyclerView.ViewHolder(itemView) {
 
-    private val name: TextView = itemView.findViewById(R.id.name_textView)
-    private val description: TextView = itemView.findViewById(R.id.description_textView)
+    private val name: TextView = itemView.findViewById(R.id.habit_name_textView)
+    private val description: TextView = itemView.findViewById(R.id.habit_description_textView)
     private val type: TextView = itemView.findViewById(R.id.type_textView)
     private val priority: TextView = itemView.findViewById(R.id.priority_textView)
     private val times: TextView = itemView.findViewById(R.id.times_textView)
